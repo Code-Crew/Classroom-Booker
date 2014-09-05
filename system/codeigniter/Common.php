@@ -105,9 +105,10 @@ function &get_config()
 		
 	if ( ! isset($main_conf))
 	{
-		if ( ! file_exists(APPPATH.'config/config'.EXT))
+		$cfg_path = APPPATH.'config/config'.EXT;
+		if ( ! file_exists($cfg_path))
 		{
-			exit('The configuration file config'.EXT.' does not exist.');
+			exit("The configuration file does not exist. ({$cfg_path})");
 		}
 		
 		require(APPPATH.'config/config'.EXT);
