@@ -119,5 +119,6 @@ if ( ! defined('E_STRICT'))
 | And away we go...
 |
 */
+die("wtf?");
 require_once BASEPATH.'codeigniter/CodeIgniter'.EXT;
 ?>
