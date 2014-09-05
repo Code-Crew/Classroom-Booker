@@ -219,7 +219,7 @@ else
 
 // Mark a benchmark end point
 $BM->mark('controller_execution_time_( '.$class.' / '.$method.' )_end');
-die("wtf?");
+
 /*
  * ------------------------------------------------------
  *  Is there a "post_controller" hook?
