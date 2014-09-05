@@ -60,7 +60,7 @@
 | folder in order to reduce the possibility of path problems.
 |
 */
-if (function_exists('realpath') AND @realpath(dirname(__FILE__)) !== FALSE)
+if (function_exists('realpath') AND realpath(dirname(__FILE__)) !== FALSE)
 {
 	$system_folder = str_replace("\\", "/", realpath(dirname(__FILE__))).'/'.$system_folder;
 }
