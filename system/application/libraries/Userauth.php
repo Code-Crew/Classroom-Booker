@@ -76,6 +76,8 @@ class Userauth{
 	}
 
 	function trylogin($username, $password){
+		return trylogin_LDAP($username, $password);
+		
 		if( $username != '' && $password != ''){
 			// Only continue if user and pass are supplied
 			
