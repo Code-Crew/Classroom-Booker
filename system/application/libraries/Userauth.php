@@ -63,6 +63,14 @@ class Userauth{
 	 */
 	function trylogin($username, $password){
 		if( $username != '' && $password != ''){
+			$ldap = ldap_connect("ldap://cghs-office.local.slane.k12.or.us") or die("Could not connect to LDAP server.");
+			$bind = ldap_bind($ldap, $username, $password);
+			return $bind;
+		}
+	}
+
+	function trylogin_OLD($username, $password){
+		if( $username != '' && $password != ''){
 			// Only continue if user and pass are supplied
 			
 			// SHA1 the password if it isn't already
