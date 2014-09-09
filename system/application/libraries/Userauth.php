@@ -65,6 +65,11 @@ class Userauth{
 		if( $username != '' && $password != ''){
 			$ldap = ldap_connect("ldap://cghs-office.local.slane.k12.or.us") or die("Could not connect to LDAP server.");
 			$bind = ldap_bind($ldap, $username, $password);
+		    if (ldap_get_option($handle, 0x0032, $extended_error)) {
+		        echo "Error Binding to LDAP: $extended_error";
+		    } else {
+		        echo "Error Binding to LDAP: No additional information is available.";
+		    }
 			return $bind;
 		}
 	}
