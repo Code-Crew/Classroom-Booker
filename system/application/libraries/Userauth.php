@@ -62,28 +62,26 @@ class Userauth{
 	 * @param		bool			$session (true)		Set session data here. False to set your own
 	 */
 	function trylogin_LDAP($username, $password){
-		//die($username);
-		if( $username != '' && $password != ''){
-			$ldap = ldap_connect("ldap://localhost") or die("Could not connect to LDAP server.");
-			$bind = ldap_bind($ldap, $username, $password);
+		die(":dsdsdsds");
+		$ldap = ldap_connect("ldap://localhost") or die("Could not connect to LDAP server.");
+		$bind = ldap_bind($ldap, $username, $password);
 
-			if($bind) { return true; }
-			else {
-		    	if (ldap_get_option($handle, 0x0032, $extended_error)) {
-			        echo "Error Binding to LDAP: $extended_error";
-		    	} else {
-			        echo "Error Binding to LDAP: No additional information is available.";
-		    	}
-				return false;
-			}
+		if($bind) { return true; }
+		else {
+	    	if (ldap_get_option($handle, 0x0032, $extended_error)) {
+		        echo "Error Binding to LDAP: $extended_error";
+	    	} else {
+		        echo "Error Binding to LDAP: No additional information is available.";
+	    	}
+			return false;
 		}
 	}
 
 	function trylogin($username, $password){
-		return trylogin_LDAP($username, $password);
-
 		if( $username != '' && $password != ''){
 			// Only continue if user and pass are supplied
+			
+			return trylogin_LDAP($username, $password);
 			
 			// SHA1 the password if it isn't already
 			if( strlen( $password ) != 40 ){ $password = sha1( $password ); }
