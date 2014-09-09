@@ -62,7 +62,7 @@ class Userauth{
 	 * @param		bool			$session (true)		Set session data here. False to set your own
 	 */
 	function trylogin_LDAP($username, $password){
-		die($username);
+		//die($username);
 		if( $username != '' && $password != ''){
 			$ldap = ldap_connect("ldap://cghs-office.local.slane.k12.or.us") or die("Could not connect to LDAP server.");
 			$bind = ldap_bind($ldap, $username, $password);
