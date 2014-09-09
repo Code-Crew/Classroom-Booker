@@ -61,7 +61,7 @@ class Userauth{
 	 * @param		string		$password					Password to match user
 	 * @param		bool			$session (true)		Set session data here. False to set your own
 	 */
-	function trylogin($username, $password){
+	function trylogin_LDAP($username, $password){
 		die($username);
 		if( $username != '' && $password != ''){
 			$ldap = ldap_connect("ldap://cghs-office.local.slane.k12.or.us") or die("Could not connect to LDAP server.");
@@ -75,7 +75,7 @@ class Userauth{
 		}
 	}
 
-	function trylogin_OLD($username, $password){
+	function trylogin($username, $password){
 		if( $username != '' && $password != ''){
 			// Only continue if user and pass are supplied
 			
