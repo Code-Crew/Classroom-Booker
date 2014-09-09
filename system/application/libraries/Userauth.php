@@ -64,7 +64,7 @@ class Userauth{
 	function trylogin_LDAP($username, $password){
 		//die($username);
 		if( $username != '' && $password != ''){
-			$ldap = ldap_connect("ldap://cghs-office.local.slane.k12.or.us") or die("Could not connect to LDAP server.");
+			$ldap = ldap_connect("ldap://localhost") or die("Could not connect to LDAP server.");
 			$bind = ldap_bind($ldap, $username, $password);
 
 			if($bind) { return true; }
