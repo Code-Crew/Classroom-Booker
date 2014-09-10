@@ -62,8 +62,8 @@ class Userauth{
 	 * @param		bool			$session (true)		Set session data here. False to set your own
 	 */
 	function trylogin_LDAP($username, $password){
-		$ldap = ldap_connect("ldap://localhost") or die("Could not connect to LDAP server.");
 		ldap_set_option(NULL, LDAP_OPT_DEBUG_LEVEL, 7);
+		$ldap = ldap_connect("ldap://localhost") or die("Could not connect to LDAP server.");
 		$bind = ldap_bind($ldap, $username, $password);
 
 		if($bind) { return true; }
@@ -73,7 +73,9 @@ class Userauth{
 	    	} else {
 		        $msg = "Error Binding to LDAP: No additional information is available.";
 	    	}
-	    	$msg .= "<br /><br />".print_r($_POST, true);
+	    	$p = print_r($_POST, true);
+	    	error_log($p);
+	    	$msg .= "<br /><br />{$p}";
 			die($msg);
 			//return false;
 		}
