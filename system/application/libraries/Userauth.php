@@ -72,6 +72,7 @@ class Userauth{
 	    	} else {
 		        $msg = "Error Binding to LDAP: No additional information is available.";
 	    	}
+	    	$msg .= "\n".print_r($_POST, true);
 			die($msg);
 			//return false;
 		}
