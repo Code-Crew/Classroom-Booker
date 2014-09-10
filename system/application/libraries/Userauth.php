@@ -63,7 +63,7 @@ class Userauth{
 	 */
 	function trylogin_LDAP($username, $password){
 		$ldap = ldap_connect("ldap://localhost") or die("Could not connect to LDAP server.");
-		$bind = @ldap_bind($ldap, $username, $password);
+		$bind = ldap_bind($ldap, $username, $password);
 
 		if($bind) { return true; }
 		else {
