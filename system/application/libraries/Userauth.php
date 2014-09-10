@@ -67,7 +67,7 @@ class Userauth{
 
 		if($bind) { return true; }
 		else {
-	    	if (ldap_get_option($handle, 0x0032, $extended_error)) {
+	    	if (ldap_get_option($ldap, 0x0032, $extended_error)) {
 		        $msg = "Error Binding to LDAP: {$extended_error}";
 	    	} else {
 		        $msg = "Error Binding to LDAP: No additional information is available.";
