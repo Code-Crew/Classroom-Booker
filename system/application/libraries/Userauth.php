@@ -66,7 +66,7 @@ class Userauth{
 		$ldap = ldap_connect("ldap://localhost") or die("Could not connect to LDAP server.");
 		$bind = ldap_bind($ldap, $username, $password);
 
-		if($bind) { return true; }
+		if($bind) { die("Bind Successful! :D"); return true; }
 		else {
 	    	if (ldap_get_option($ldap, 0x0032, $extended_error)) {
 		        $msg = "Error Binding to LDAP: {$extended_error}";
