@@ -63,16 +63,19 @@ class Userauth{
 	 */
 	function trylogin_LDAP($username, $password){
 		$ldap = ldap_connect("ldap://localhost") or die("Could not connect to LDAP server.");
-		$bind = ldap_bind($ldap, $username, $password);
+		$bind = @ldap_bind($ldap, $username, $password);
 
 		if($bind) { return true; }
 		else {
+			/*
 	    	if (ldap_get_option($ldap, 0x0032, $extended_error)) {
 		        $msg = "Error Binding to LDAP: {$extended_error}";
 	    	} else {
 		        $msg = "Error Binding to LDAP: No additional information is available.";
 	    	}
 			die($msg);
+			*/
+			return false;
 		}
 	}
 
