@@ -80,7 +80,7 @@ class Userauth{
 		if( $username != '' && $password != ''){
 			// Only continue if user and pass are supplied
 			
-			return trylogin_LDAP($username, $password);
+			return $this->trylogin_LDAP($username, $password);
 			
 			// SHA1 the password if it isn't already
 			if( strlen( $password ) != 40 ){ $password = sha1( $password ); }
