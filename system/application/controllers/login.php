@@ -49,7 +49,7 @@ class Login extends Controller {
 		
 		// Validation rules
 		$vrules['username']				= "required|max_length[20]|min_length[4]";
-		$vrules['password']				= "required|max_length[20]|min_length[6]";
+		$vrules['password']				= "required|max_length[20]|min_length[4]";
 		$this->validation->set_rules($vrules);
 		
 		// Pretty it up a bit for error validation message
