@@ -98,7 +98,7 @@ class Userauth{
 	function UpdateFromLDAP($username, $ldap = NULL, $time = false) {
 		$ldap = $ldap == NULL ? $this->ldap_info : $ldap;
 		//var_dump($ldap); die();
-		$update => array(
+		$update = array(
 			'username' => $ldap['samaccountname'],
 			'firstname' => $ldap['givenname'],
 			'lastname' => $ldap['sn'],
