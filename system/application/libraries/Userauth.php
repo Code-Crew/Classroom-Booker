@@ -163,7 +163,7 @@ class Userauth{
 		var_dump($query);
 		$query = $this->object->db->query($query);
 		$count = $query->num_rows();
-		var_dump($count); die();
+		//var_dump($count); die();
 		if($count != 1) { return false; }
 		
 		$update = array(
@@ -196,8 +196,8 @@ class Userauth{
 	function trylogin($username, $password) {
 		if( $username == '' && $password == '') { return false; }
 		$config =& get_config();
-		$split_uname = explode("\\", $username);
-		var_dump($split_uname); die();
+		$split_uname = explode("\\\\", $username);
+		//var_dump($split_uname); die();
 		$username = array(
 			'type' => $split_uname[0] == "STD" ? 'AuthSTD' : 'AuthLDAP',
 			'text' => $split_uname[0] == "STD" ? $split_uname[1] : $split_uname[0]
