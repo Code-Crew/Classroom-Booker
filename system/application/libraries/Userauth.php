@@ -58,7 +58,7 @@ class Userauth{
 		$query = $this->object->db->query("SELECT users.*, school.* FROM users, school WHERE users.username='{$username}' AND school.school_id=users.school_id LIMIT 1");
 		$count = $query->num_rows();
 		if($count != 1) { return false; }
-		
+		$row = $query->row();
 		$session_data = array(
 			'user_id' => $row->user_id,
 			'username' =>  $row->username,
