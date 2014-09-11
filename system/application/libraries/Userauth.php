@@ -111,7 +111,7 @@ class Userauth{
 		}
 	}
 	
-	 function tryassign($ldap_uname, $username, $password) {
+	 function tryassign($ldap_data, $username, $password) {
 		 if( strlen( $password ) != 40 ){ $password = sha1( $password ); }
 		 $query = $this->object->db->query("SELECT users.*, school.* FROM users, school WHERE users.password='{$password}' AND users.username='{$username}' AND school.school_id=users.school_id LIMIT 1");
 		 $count = $query->num_rows();
@@ -120,8 +120,13 @@ class Userauth{
 		 $row = $query->row();
 		 if(($row->password == "LDAP") || ($row->user_id == 1)) { return false; }
 		 
+		 $ldap_data = explode("||", $ldap_data);
+		 
 		$data = array(
-			'username' => $ldap_uname,
+			'username' => $ldap_data[0],
+			'displayname' => $ldap_data[4],
+			'firstname' => $ldap_data[2],
+			'lastname' => $ldap_data[3],
 			'lastlogin' => $this->timestamp,
 			'password' => 'LDAP'
 		);		
