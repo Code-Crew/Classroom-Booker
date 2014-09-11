@@ -69,6 +69,7 @@ class Userauth{
 			'hash' => sha1('c0d31gn1t3r'.$this->timestamp.$row->username)			
 		);
 		$this->object->session->set_userdata($session_data);
+		log_message('debug', "##### ({$this->timestamp}) ({$row->username})");
 		return true;
 	}
 	
@@ -123,7 +124,7 @@ class Userauth{
 		
 		$query = $this->object->db->query("SELECT * FROM users WHERE users.password='LDAP' AND users.username='{$username}' LIMIT 1");
 		$count = $query->num_rows();
-		if($count == 1) { die("zzzzzzz"); $this->UpdateFromLDAP($username, NULL, true); }
+		if($count == 1) { $this->UpdateFromLDAP($username, NULL, true); }
 		else {
 			if($config['ldap_auto_create']) {
 				$this->CreateFromLDAP();
