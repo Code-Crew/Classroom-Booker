@@ -54,6 +54,17 @@ class Userauth{
 		#redirect('user/login','location');
 	}
 	
+	function ArrayifyLDAP($ldap = NULL) {
+		if($ldap == NULL) { $ldap = $this->ldap_info; }
+		$buffer = array();
+		foreach($ldap as $key => $value) {
+			if(isset($value[0])) {
+				$buffer[$key] = $value[0];
+			}
+		}
+		return $buffer;
+	}
+	
 	function GenerateSession($username) {
 		$query = $this->object->db->query("SELECT users.*, school.* FROM users, school WHERE users.username='{$username}' AND school.school_id=users.school_id LIMIT 1");
 		$count = $query->num_rows();
@@ -74,7 +85,8 @@ class Userauth{
 	}
 	
 	function CreateFromLDAP($ldap = NULL) {
-		$ldap = $ldap == NULL ? $this->ldap_info : $ldap;
+		//$ldap = $ldap == NULL ? $this->ldap_info : $ldap;
+		if($ldap == NULL) { $ldap = $this->ldap_info; }
 		if(count($ldap) <= 0) { die("Creation from empty LDAP is impossible"); }
 		
 		$create = array(
@@ -97,7 +109,8 @@ class Userauth{
 	}
 	
 	function UpdateFromLDAP($username, $ldap = NULL, $time = false) {
-		$ldap = $ldap == NULL ? $this->ldap_info : $ldap;
+		//$ldap = $ldap == NULL ? $this->ldap_info : $ldap;
+		if($ldap == NULL) { $ldap = $this->ldap_info; }
 		//var_dump($ldap); die();
 		$update = array(
 			'username' => $ldap['samaccountname'],
@@ -120,7 +133,7 @@ class Userauth{
 		if(!$bind) { return false; }
 		
 		$sr=ldap_search($ldap, $config['ldap_search_dn'], "(sAMAccountName={$username})");
-		$this->ldap_info = ldap_get_entries($ldap, $sr)[0];
+		$this->ldap_info = ArrayifyLDAP(ldap_get_entries($ldap, $sr)[0]);
 		if($this->ldap_info['count'] < 1) { return false; }
 		
 		$query = $this->object->db->query("SELECT * FROM users WHERE users.password='LDAP' AND users.username='{$username}' LIMIT 1");
