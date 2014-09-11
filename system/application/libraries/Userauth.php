@@ -690,17 +690,16 @@ class Userauth{
 															'users.username,'
 															.'users.lastlogin,'
 															.'users.authlevel,'
-															.'school.school_id,'
+															//.'school.school_id,'
 															/*.'school.code AS schoolcode,'*/
 															);
 		$this->object->db->from('users');
-		$this->object->db->join('school', 'school.school_id = users.school_id');
+		//$this->object->db->join('school', 'school.school_id = users.school_id');
 		// $this->object->db->where('schools.code', $session_schoolcode);
 		$this->object->db->where('users.username', $session_username);
 		$this->object->db->limit(1);
 		$query = $this->object->db->get();
 		log_message('debug', 'loggedin() query: '.$this->object->db->last_query() );
-		die($query->num_rows());
 		if( $query->num_rows() == 1){
 			log_message('debug', 'loggedin() result: 1 row returned');
 			$row = $query->row();
