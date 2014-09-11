@@ -91,6 +91,7 @@ class Userauth{
 		
 		$sr=ldap_search($ldap, $config['ldap_search_dn'], "(sAMAccountName={$username})", array('name', 'uSNCreated', 'displayName', 'userPrincipalName', 'givenName', 'sn'));
 		$info = ldap_get_entries($ldap, $sr);
+		if($info['count'] < 1) { return false; }
 		//die(print_r($info, true));
 		$sn = explode("@", $info[0]['userprincipalname'][0]);
 		$sessdata = array(
@@ -128,28 +129,8 @@ class Userauth{
 			$this->object->db->update('users', $data);
 		}
 		return true;
-/*
-				$sessdata['user_id'] = $row->user_id;
-				$sessdata['username'] = $username;
-				$sessdata['schoolname'] = $row->schoolname;
-				$sessdata['displayname'] = $row->displayname;
-				$sessdata['school_id'] = $row->school_id;
-				$sessdata['loggedin'] = 'true';
-				// Hash is <login_date><username><schoolcode><authlevel>
-				$str = 'c0d31gn1t3r'.$timestamp.$username.$this->GetAuthLevel($row->user_id);
-				log_message('debug', 'Hash string: '.$str);
-				$sessdata['hash'] = sha1($str);
-				
-				// param to set the session = true
-				log_message('debug', "Userauth: trylogin: setting session data");
-				log_message('debug', "Userauth: trylogin: Session: ".var_export($sessdata, true) );
-				// Set the session
-				$this->object->session->set_userdata($sessdata);
-				return true;			
-*/
-		//}
 	}
-	 
+/*	 
 	function trylogin_LDAP($username, $password){
 		ldap_set_option(NULL, LDAP_OPT_DEBUG_LEVEL, 7);
 		$ldap = ldap_connect("ldap://localhost") or die("Could not connect to LDAP server.");
@@ -180,8 +161,8 @@ class Userauth{
 			if( strlen( $password ) != 40 ){ $password = sha1( $password ); }
 			
 			// Check details in DB
-			/*$sql =	"SELECT username, fullname FROM users ".
-							"WHERE username='$username' AND password='$password' LIMIT 1";*/
+			//$sql =	"SELECT username, fullname FROM users ".
+			//				"WHERE username='$username' AND password='$password' LIMIT 1";
 			#$query = $this->object->db->query($sql);
 
 			$this->object->db->select(
@@ -227,17 +208,7 @@ class Userauth{
 				log_message('debug',"Last login by $username SQL: $sql");
 				
 				// Set session data array			
-				/*$sessdata = array(
-													'use
-													'username' => $username,
-													'schoolcode' => $schoolcode,
-													'schoolname' => $row->schoolname,
-													'displayname' => $row->displayname,
-													'school_id' => $row->school_id,
-													'loggedin' => 'true',
-													// Hash is <login_date><username><schoolcode><authlevel>
-													'hash' => sha1('c0d31gn1t3r'.$timestamp.$username.$schoolcode.$this->getAuthLevel($schoolcode,$username)),
-													);*/
+
 				$sessdata['user_id'] = $row->user_id;
 				$sessdata['username'] = $username;
 				$sessdata['schoolname'] = $row->schoolname;
@@ -264,7 +235,7 @@ class Userauth{
 			return false;
 		}
 	}
-
+*/
 
 
 
