@@ -92,15 +92,16 @@ class Userauth{
 		//if($return <= 0) {
 			$sr=ldap_search($ldap, $config['ldap_search_dn'], "(sAMAccountName={$username})", array('name', 'uSNCreated', 'displayName', 'userPrincipalName'));
 			$info = ldap_get_entries($ldap, $sr);
-			die(print_r($info, true));
+			//die(print_r($info, true));
+			$sn = split("@", $info[0]['userprincipalname'][0]);
 			$sessdata = array(
-				'user_id' => 0,
+				'user_id' => $info[0]['usncreated'][0],
 				'username' => $username,
-				'schoolname' => 0,
-				'displayname' => "",
-				'school_id' => 0,
+				'schoolname' => $sn[1],
+				'displayname' => $info[0]['displayname'][0],
+				'school_id' => 1,
 				'loggedin' => true,
-				'hash' => ""
+				'hash' => md5($info[0]['usncreated'][0].$username)
 			);
 			$this->object->session->set_userdata($sessdata);
 			return true;
