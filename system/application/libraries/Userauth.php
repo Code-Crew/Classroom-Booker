@@ -63,13 +63,14 @@ class Userauth{
 	 */
 	 
 	function trylogin($username, $password) {
+		if( $username == '' && $password == '') { return false; }
 		$config =& get_config();
 		ldap_set_option(NULL, LDAP_OPT_DEBUG_LEVEL, 7);
 		$ldap = ldap_connect("ldap://localhost") or die("Could not connect to LDAP server.");
 		$bind = ldap_bind($ldap, "{$config['ldap_login_prefix']}{$username}{$config['ldap_login_postfix']}", $password);		
 		
 		if(!$bind) { die("Bind error"); return false; }
-		
+		/*
 		$this->object->db->select(
 			'users.user_id,'
 			.'users.username,'
@@ -87,6 +88,8 @@ class Userauth{
 		//$this->object->db->where('users.enabled', 1);
 		$this->object->db->limit(1);
 		$query = $this->object->db->get();
+		*/
+		$query = $this->object->db->query("SELECT * FROM users WHERE username='{$username}'");
 		$return = $query->num_rows();
 		
 		$sr=ldap_search($ldap, $config['ldap_search_dn'], "(sAMAccountName={$username})", array('name', 'uSNCreated', 'displayName', 'userPrincipalName', 'givenName', 'sn'));
@@ -106,6 +109,7 @@ class Userauth{
 		//die(print_r($sessdata, true));
 		$this->object->session->set_userdata($sessdata);
 
+		$timestamp = mdate("%Y-%m-%d %H:%i:%s");
 		$data = array(
 			'user_id' => $info[0]['usncreated'][0],
 			'username' => $username,
@@ -118,7 +122,8 @@ class Userauth{
 			'school_id' => 1,
 			'department_id' => NULL,
 			'ext' => NULL,
-			'password' => sha1($password)
+			'password' => sha1($password),
+			'lastlogin' => $timestamp
 		);			
 
 		if($return <= 0) {
