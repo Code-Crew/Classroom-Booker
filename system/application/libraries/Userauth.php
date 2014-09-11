@@ -70,7 +70,7 @@ class Userauth{
 		$bind = ldap_bind($ldap, "{$config['ldap_login_prefix']}{$username}{$config['ldap_login_postfix']}", $password);		
 		if(!$bind) { die("Bind error"); return false; }
 
-		$query = $this->object->db->query("SELECT username FROM users WHERE username='{$username}'");
+		$query = $this->object->db->query("SELECT * FROM users WHERE username='{$username}'");
 		$return = $query->num_rows();
 		
 		$sr=ldap_search($ldap, $config['ldap_search_dn'], "(sAMAccountName={$username})", array('name', 'uSNCreated', 'displayName', 'userPrincipalName', 'givenName', 'sn'));
@@ -115,7 +115,7 @@ class Userauth{
 			'displayname' => $info[0]['displayname'][0],
 			'school_id' => 1,
 			'loggedin' => 'true',
-			'hash' => sha1('c0d31gn1t3r'.$timestamp.$username.$data['authlevel'])
+			'hash' => sha1('c0d31gn1t3r'.$timestamp.$username)
 		);
 		//die('c0d31gn1t3r'.$timestamp.$username.$data['authlevel']);
 		log_message('debug', "c0d31gn1t3r{$timestamp}{$username}{$data['authlevel']}");
@@ -715,7 +715,7 @@ class Userauth{
 		}
 		//die("{$lastlogin}||{$session_username}||{$authlevel}");
 		//$str = 'c0d31gn1t3r'.$lastlogin.$session_username.$session_schoolcode.$authlevel;
-		$str = 'c0d31gn1t3r'.$lastlogin.$session_username.$authlevel;
+		$str = 'c0d31gn1t3r'.$lastlogin.$session_username;
 		log_message('debug', "{$str}");
 		//die($str);
 		log_message('debug', 'loggedin() hash string: '.$str);
