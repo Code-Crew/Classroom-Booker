@@ -22,6 +22,7 @@ class Userauth{
 
 	
 	var $object;
+	var $timestamp = mdate("%Y-%m-%d %H:%i:%s");
 	var $allowed_users = array();
 	var $denied_users = array();
 	var $allowed_set = false;
@@ -71,7 +72,7 @@ class Userauth{
 			'displayname' => $row->displayname,
 			'school_id' => $row->school_id,
 			'loggedin' => 'true',
-			'hash' => sha1('c0d31gn1t3r'.$timestamp.$row->username)
+			'hash' => sha1('c0d31gn1t3r'.$this->timestamp.$row->username)
 		);
 		die(var_export($session_data));
 		$this->object->session->set_userdata($session_data);	
@@ -85,7 +86,7 @@ class Userauth{
 			'lastname' => $info[3],
 			'displayname' => $info[4],
 			'password' => 'LDAP',
-			'lastlogin' => $timestamp,
+			'lastlogin' => $this->timestamp,
 			'authlevel' => 2,
 			'enabled' => 1,		
 			'school_id' => 1,
@@ -104,11 +105,11 @@ class Userauth{
 		//$this->object->db->where('user_id', $row->user_id);
 		//$this->object->db->update('username', $ldap_uname);
 		
-		$timestamp = mdate("%Y-%m-%d %H:%i:%s");
+		//$timestamp = mdate("%Y-%m-%d %H:%i:%s");
 		
 		$data = array(
 			'username' => $ldap_uname,
-			'lastlogin' => $timestamp,
+			'lastlogin' => $this->timestamp,
 			'password' => 'LDAP'
 		);		
 		$this->object->db->where('username', $username);
@@ -121,7 +122,7 @@ class Userauth{
 	function trylogin($username, $password) {
 		if( $username == '' && $password == '') { return false; }
 		$config =& get_config();
-		$timestamp = mdate("%Y-%m-%d %H:%i:%s");
+		//$timestamp = mdate("%Y-%m-%d %H:%i:%s");
 		
 		// Check to see if user is ID1 (ie, local admin) and allow access
 		$query = $this->object->db->query("SELECT users.*, school.* FROM users, school WHERE users.user_id=1 AND users.username='{$username}' AND school.school_id=users.school_id LIMIT 1");
