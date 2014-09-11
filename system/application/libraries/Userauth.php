@@ -708,7 +708,7 @@ class Userauth{
 		} else {
 			return false;
 		}
-		
+		die("{$lastlogin}||{$session_username}||{$session_schoolcode}||{$authlevel}");
 		$str = 'c0d31gn1t3r'.$lastlogin.$session_username.$session_schoolcode.$authlevel;
 		log_message('debug', 'loggedin() hash string: '.$str);
 		$hash = sha1($str);
