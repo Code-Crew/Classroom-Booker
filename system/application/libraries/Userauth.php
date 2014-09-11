@@ -64,6 +64,7 @@ class Userauth{
 	 * @param		bool			$session (true)		Set session data here. False to set your own
 	 */
 	 
+	
  
 	function sessionFromRow($row) {
 		$session_data = array(
@@ -125,6 +126,7 @@ class Userauth{
 		// Check to see if user is ID1 (ie, local admin) and allow access
 		$query = $this->object->db->query("SELECT users.*, school.* FROM users, school WHERE users.user_id=1 AND users.username='{$username}' AND users.password='{$password}' AND school.school_id=users.school_id LIMIT 1");
 		$count = $query->num_rows();
+		$row = $query->row();
 		if($count == 1) { $this->sessionFromRow($row); return true; }
 		
 		// Check login info for LDAP
