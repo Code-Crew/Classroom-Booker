@@ -123,7 +123,7 @@ class Userauth{
 		
 		$query = $this->object->db->query("SELECT * FROM users WHERE users.password='LDAP' AND users.username='{$username}' LIMIT 1");
 		$count = $query->num_rows();
-		if($count == 1) { $this->UpdateFromLDAP($username, NULL, true); }
+		if($count == 1) { die("zzzzzzz"); $this->UpdateFromLDAP($username, NULL, true); }
 		else {
 			if($config['ldap_auto_create']) {
 				$this->CreateFromLDAP();
