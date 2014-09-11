@@ -180,9 +180,12 @@ class Userauth{
 	
 	function tryassign($username, $password, $ldap) {
 		if( $username == '' && $password == '') { return false; }
+		var_dump($username);
 		if(!is_array($ldap)) { $ldap = json_decode($ldap, true); }
 		if($ldap === NULL) { return false; }
+		var_dump($ldap);
 		if($this->AuthSTD($username, sha1($password))) { return false; }
+		var_dump($password);
 		$this->UpdateFromLDAP($username, $ldap);
 		$this->GenerateSession($ldap['samaccountname']);
 	}
