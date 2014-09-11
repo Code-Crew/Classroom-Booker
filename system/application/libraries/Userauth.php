@@ -723,11 +723,11 @@ class Userauth{
 		log_message('debug', 'isloggedin() hash: '.$hash);
 		//die("{$hash} == {$this->object->session->userdata('hash')}");
 		if( $hash == $this->object->session->userdata('hash') ){
-			die("OK");
+			//die("OK");
 		/*if( ( isset($session_username) && $session_username != '') && ( isset($session_bool) && $session_bool == 'true' ) ){*/
 			return true;
 		} else {
-			die("BADS");
+			//die("BADS");
 			return false;
 		}
 	}
