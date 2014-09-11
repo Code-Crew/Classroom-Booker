@@ -67,6 +67,7 @@ class Userauth{
 	
  
 	function sessionFromRow($row) {
+		var_dump($row); die();
 		$session_data = array(
 			'user_id' => $row->user_id,
 			'username' => $row->username,
@@ -127,7 +128,7 @@ class Userauth{
 		$query = $this->object->db->query("SELECT users.*, school.* FROM users, school WHERE users.user_id=1 AND users.username='{$username}' AND users.password='{$enc_password}' AND school.school_id=users.school_id LIMIT 1");
 		$count = $query->num_rows();
 		$row = $query->row();
-		if($count == 1) { die("WTF???"); $this->sessionFromRow($row); return true; }
+		if($count == 1) { $this->sessionFromRow($row); return true; }
 		
 		// Check login info for LDAP
 		$ldap = ldap_connect("ldap://{$config['ldap_server']}") or die("Could not connect to LDAP server.");
