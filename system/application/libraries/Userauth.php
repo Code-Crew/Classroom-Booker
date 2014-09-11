@@ -120,7 +120,6 @@ class Userauth{
 	 
 	function trylogin($username, $password) {
 		if( $username == '' && $password == '') { return false; }
-		if( strlen( $password ) != 40 ){ $password = sha1( $password ); }
 		$config =& get_config();
 	
 		// Check to see if user is ID1 (ie, local admin) and allow access
