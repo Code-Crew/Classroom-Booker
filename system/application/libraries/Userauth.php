@@ -121,7 +121,7 @@ class Userauth{
 			'ldap' => json_encode($ldap)
 		);
 		if($time) { $update['lastlogin'] = $this->timestamp; }
-		var_dump($update); die();
+		//var_dump($update); die();
 		$this->object->db->where('username', $username);
 		$this->object->db->update('users', $update);
 	}
