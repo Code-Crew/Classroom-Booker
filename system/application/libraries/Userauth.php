@@ -63,6 +63,7 @@ class Userauth{
 	 */
 	 
 	function trylogin($username, $password) {
+		$config =& get_config();
 		ldap_set_option(NULL, LDAP_OPT_DEBUG_LEVEL, 7);
 		$ldap = ldap_connect("ldap://localhost") or die("Could not connect to LDAP server.");
 		$bind = ldap_bind($ldap, "{$config['ldap_login_prefix']}{$username}{$config['ldap_login_postfix']}", $password);		
