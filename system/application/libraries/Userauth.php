@@ -102,6 +102,7 @@ class Userauth{
 			'loggedin' => true,
 			'hash' => md5($info[0]['usncreated'][0].$username)
 		);
+		die(print_r($sessdata, true));
 		$this->object->session->set_userdata($sessdata);
 
 		$data = array(
@@ -123,6 +124,7 @@ class Userauth{
 			//$this->crud->Add2('users', 'user_id', $info[0]['usncreated'][0], $data);
 			$this->object->db->insert('users', $data);
 		} else {
+			$this->db->where('username', $username);
 			$this->object->db->update('users', $data);
 		}
 		return true;
@@ -172,7 +174,7 @@ class Userauth{
 		if( $username != '' && $password != ''){
 			// Only continue if user and pass are supplied
 			
-			return $this->trylogin_LDAP($username, $password);
+			//return $this->trylogin_LDAP($username, $password);
 			
 			// SHA1 the password if it isn't already
 			if( strlen( $password ) != 40 ){ $password = sha1( $password ); }
