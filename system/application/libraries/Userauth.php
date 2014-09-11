@@ -664,7 +664,6 @@ class Userauth{
 	 * @return	bool							User is enabled:true
 	 */
 	function enabled( $username ){
-		return true;
 		$sql = "SELECT enabled FROM users WHERE username='$username'";
 		$query = $this->object->db->query($sql);
 		$row = $query->row();
@@ -701,6 +700,7 @@ class Userauth{
 		$this->object->db->limit(1);
 		$query = $this->object->db->get();
 		log_message('debug', 'loggedin() query: '.$this->object->db->last_query() );
+		die($query->num_rows());
 		if( $query->num_rows() == 1){
 			log_message('debug', 'loggedin() result: 1 row returned');
 			$row = $query->row();
