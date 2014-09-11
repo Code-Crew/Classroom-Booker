@@ -72,7 +72,7 @@ class Userauth{
 
 		$timestamp = mdate("%Y-%m-%d %H:%i:%s");
 
-		$query = $this->object->db->query("SELECT user.*, school.name FROM users WHERE username='{$username}' INNER JOIN `school` on user.school = school.school_id LIMIT 1");
+		$query = $this->object->db->query("SELECT users.*, school.* FROM users, school WHERE school.school_id=users.school_id LIMIT 1");
 		$return = $query->num_rows();
 		//die($return);
 		if($return > 0) {
@@ -84,7 +84,7 @@ class Userauth{
 				$sessdata = array(
 					'user_id' => $row->user_id,
 					'username' => $row->username,
-					'schoolname' => explode("@", $row->email)[1],
+					'schoolname' => $row->name,
 					'displayname' => $row->displayname,
 					'school_id' => $row->school_id,
 					'loggedin' => 'true',
