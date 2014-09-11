@@ -99,7 +99,7 @@ class Userauth{
 				'schoolname' => 0,
 				'displayname' => "",
 				'school_id' => 0,
-				'loggedin' => true
+				'loggedin' => true,
 				'hash' => ""
 			);
 			$this->object->session->set_userdata($sessdata);
