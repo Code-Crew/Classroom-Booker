@@ -114,7 +114,7 @@ class Userauth{
 			'loggedin' => 'true',
 			'hash' => sha1('c0d31gn1t3r'.$timestamp.$username.$this->GetAuthLevel($data['user_id']))
 		);
-		//die(var_export($sessdata, true));
+		die(var_export($sessdata['hash'], true));
 		$this->object->session->set_userdata($sessdata);		
 		
 		return true;
@@ -708,9 +708,10 @@ class Userauth{
 		} else {
 			return false;
 		}
-		die("{$lastlogin}||{$session_username}||{$authlevel}");
+		//die("{$lastlogin}||{$session_username}||{$authlevel}");
 		//$str = 'c0d31gn1t3r'.$lastlogin.$session_username.$session_schoolcode.$authlevel;
 		$str = 'c0d31gn1t3r'.$lastlogin.$session_username.$authlevel;
+		die($str);
 		log_message('debug', 'loggedin() hash string: '.$str);
 		$hash = sha1($str);
 		log_message('debug', 'isloggedin() hash: '.$hash);
