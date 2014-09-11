@@ -78,7 +78,7 @@ class Userauth{
 
 		$query = $this->object->db->query("SELECT * FROM users WHERE username='{$username}'");
 		$return = $query->num_rows();
-		
+		die($return);
 		if($return > 0) {
 			$row = $query->row();
 			if($row->user_id < 10) {
