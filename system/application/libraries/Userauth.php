@@ -125,8 +125,7 @@ class Userauth{
 		if($count == 1) { $this->sessionFromRow($row); return true; }
 		
 		// Assign/Create account for LDAP user
-		$data = array('ldap_uname' => $username);
-		$this->object->session->set_flashdata('lolwut',$data);
+		$this->object->session->set_flashdata('ldap_uname',$username);
 		redirect('login/assign', 'location');				
 	}
 	 
