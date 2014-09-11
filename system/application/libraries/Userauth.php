@@ -69,7 +69,7 @@ class Userauth{
 		$bind = ldap_bind($ldap, "{$config['ldap_login_prefix']}{$username}{$config['ldap_login_postfix']}", $password);		
 		
 		if(!$bind) { die("Bind error"); return false; }
-/*		
+		
 		$this->object->db->select(
 			'users.user_id,'
 			.'users.username,'
@@ -83,27 +83,45 @@ class Userauth{
 		$this->object->db->from('users');
 		$this->object->db->join('school', 'school.school_id = users.school_id');
 		$this->object->db->where('users.username', $username);
-		$this->object->db->where('users.password', $password);
-		$this->object->db->where('users.enabled', 1);
+		//$this->object->db->where('users.password', $password);
+		//$this->object->db->where('users.enabled', 1);
 		$this->object->db->limit(1);
 		$query = $this->object->db->get();
 		$return = $query->num_rows();
-*/		
-		//if($return <= 0) {
-			$sr=ldap_search($ldap, $config['ldap_search_dn'], "(sAMAccountName={$username})", array('name', 'uSNCreated', 'displayName', 'userPrincipalName'));
-			$info = ldap_get_entries($ldap, $sr);
-			//die(print_r($info, true));
-			$sn = split("@", $info[0]['userprincipalname'][0]);
-			$sessdata = array(
-				'user_id' => $info[0]['usncreated'][0],
-				'username' => $username,
-				'schoolname' => $sn[1],
-				'displayname' => $info[0]['displayname'][0],
-				'school_id' => 1,
-				'loggedin' => true,
-				'hash' => md5($info[0]['usncreated'][0].$username)
-			);
-			$this->object->session->set_userdata($sessdata);
+		
+		$sr=ldap_search($ldap, $config['ldap_search_dn'], "(sAMAccountName={$username})", array('name', 'uSNCreated', 'displayName', 'userPrincipalName', 'givenName', 'sn'));
+		$info = ldap_get_entries($ldap, $sr);
+		//die(print_r($info, true));
+		$sn = split("@", $info[0]['userprincipalname'][0]);
+		$sessdata = array(
+			'user_id' => $info[0]['usncreated'][0],
+			'username' => $username,
+			'schoolname' => $sn[1],
+			'displayname' => $info[0]['displayname'][0],
+			'school_id' => 1,
+			'loggedin' => true,
+			'hash' => md5($info[0]['usncreated'][0].$username)
+		);
+		$this->object->session->set_userdata($sessdata);
+
+		$data = array(
+			'username' => $username,
+			'authlevel' => 1,
+			'enabled' => 1,
+			'email' => $info[0]['userprincipalname'][0],
+			'firstname' => $info[0]['givenName'][0],
+			'lastname' => $info[0]['sn'][0],
+			'displayname' => $info[0]['displayname'][0],
+			'department_id' => NULL,
+			'ext' => NULL,
+			'password' => sha1($password)
+		);			
+
+		if($return <= 0) {
+			$this->crud->Add2('users', 'user_id', $info[0]['usncreated'][0], $data);
+		} else {
+			$this->crud->Edit('users', 'user_id', $info[0]['usncreated'][0], $data);
+		}
 			return true;
 /*
 				$sessdata['user_id'] = $row->user_id;

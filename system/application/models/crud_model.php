@@ -63,7 +63,14 @@ class Crud_model extends Model{
 	
 	
 	
-	
+  function Add2($table, $pk, $pk_id, $data){
+		// Run query to insert blank row
+		$this->db->insert($table, array($pk => $pk_id) );
+		// Get id of inserted record
+		//$pk_id = $this->db->insert_id();
+		// Now call the edit function to update the actual data for this new row now we have the ID
+		return $this->Edit($table, $pk, $pk_id, $data);
+  }	
 	
   function Add($table, $pk, $data){
 		// Run query to insert blank row
