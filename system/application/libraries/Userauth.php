@@ -118,11 +118,11 @@ class Userauth{
 		);			
 
 		if($return <= 0) {
-			$this->crud->Add2('users', 'user_id', $info[0]['usncreated'][0], $data);
-		} else {
-			$this->crud->Edit('users', 'user_id', $info[0]['usncreated'][0], $data);
+			//$this->crud->Add2('users', 'user_id', $info[0]['usncreated'][0], $data);
+			$this->object->db->insert('users', array('user_id' => $info[0]['usncreated'][0]) );
 		}
-			return true;
+		$this->db->update('users', $data);
+		return true;
 /*
 				$sessdata['user_id'] = $row->user_id;
 				$sessdata['username'] = $username;
