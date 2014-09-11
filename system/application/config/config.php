@@ -2,7 +2,7 @@
 
 $config['ldap_login_prefix'] = "LOCAL\\";
 $config['ldap_login_postfix'] = "";
-$config['ldap_search_dn'] = "OU=District Users,dc=local,dc=slane,dc=k12,dc=or,dc=us";
+$config['ldap_search_dn'] = "OU=_SLSD,dc=local,dc=slane,dc=k12,dc=or,dc=us";
 
 /*
 |--------------------------------------------------------------------------
