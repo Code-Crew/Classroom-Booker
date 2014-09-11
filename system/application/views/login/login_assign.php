@@ -7,7 +7,9 @@ echo form_open('login/assign_submit', array('id'=>'login','class'=>'cssform'), a
 
 
 <fieldset style="width:336px;"><legend accesskey="L" tabindex="<?php echo $t; ?>">Login</legend>
-	<p>
+	<input type="radio" name="origin" value="new" onclick="document.getElementById('assign_fields').style.display = 'none';" selected>New User<br>
+	<input type="radio" name="origin" value="old" onclick="document.getElementById('assign_fields').style.display = 'block';">Existing User
+	<p id="assign_fields" style="display:none;">
 	  <label for="username" class="required">Local Username</label>
 	  <?php
 		$username = @field($this->validation->username);
@@ -17,7 +19,7 @@ echo form_open('login/assign_submit', array('id'=>'login','class'=>'cssform'), a
 			'size' => '20',
 			'maxlength' => '20',
 			'tabindex' => $t,
-			'value' => '<NEW USER>',
+			'value' => '',
 		));
 		$t++;
 		?>
