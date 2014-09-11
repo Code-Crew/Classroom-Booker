@@ -68,7 +68,6 @@ class Login extends Controller {
 		if($ldap === NULL) { die("No LDAP Input"); }
 		
 		if($origin == 'old') {
-			$this->userauth->tryassign($username, $password, $ldap); die();
 			if( !$this->userauth->tryassign($username, $password, $ldap)){
 				$this->session->set_flashdata('auth', $this->load->view('msgbox/error', 'Incorrect username and/or password.', True));
 				$this->session->set_flashdata('ldap_json',$ldap_json);
