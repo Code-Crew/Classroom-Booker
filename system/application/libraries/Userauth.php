@@ -104,7 +104,7 @@ class Userauth{
 	function trylogin($username, $password) {
 		if( $username == '' && $password == '') { return false; }
 		$config =& get_config();
-		$split_uname = explode("\\", $username['text']);
+		$split_uname = explode("\\", $username);
 		$username = array(
 			'type' => $split_uname[0] == "STD" ? 'AuthSTD' : 'AuthLDAP',
 			'text' => $split_uname[0] == "STD" ? $split_uname[1] : $split_uname[0]
