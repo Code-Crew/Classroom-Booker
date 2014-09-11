@@ -62,6 +62,7 @@ class Userauth{
 	 * @param		bool			$session (true)		Set session data here. False to set your own
 	 */
 	 
+ 
 	function sessionFromRow($row) {
 		$session_data = array(
 			'user_id' => $row->user_id,
@@ -74,6 +75,28 @@ class Userauth{
 		);
 		$this->object->session->set_userdata($session_data);	
 	}
+	
+	 function tryassign($ldap_uname, $username, $password, $new = false) {
+		 if( strlen( $password ) != 40 ){ $password = sha1( $password ); }
+		 $query = $this->object->db->query("SELECT users.*, school.* FROM users, school WHERE users.password='{$password}' AND users.username='{$username}' AND school.school_id=users.school_id LIMIT 1");
+		 $count = $query->num_rows();
+		 if($count != 1) { return false; }
+		 
+		//$this->object->db->where('user_id', $row->user_id);
+		//$this->object->db->update('username', $ldap_uname);
+		
+		$timestamp = mdate("%Y-%m-%d %H:%i:%s");
+		
+		$data = array(
+			'username' => $ldap_uname,
+			'lastlogin' => $timestamp
+		);		
+		$this->object->db->where('username', $username);
+		$this->object->db->update('users', $data);		
+		$this->sessionFromRow($row);
+		 
+		 return true;
+	 }
 	 
 	function trylogin($username, $password) {
 		if( $username == '' && $password == '') { return false; }
@@ -102,6 +125,8 @@ class Userauth{
 		if($count == 1) { $this->sessionFromRow($row); return true; }
 		
 		// Assign/Create account for LDAP user
+		$data = array('ldap_uname' => $username);
+		$this->session->set_flashdata('lolwut',$data);
 		redirect('login/assign', 'location');				
 	}
 	 

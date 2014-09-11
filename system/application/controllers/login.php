@@ -60,6 +60,14 @@ class Login extends Controller {
   
   
   function assign_submit() {
+		$ldap_uname = $this->input->post('ldap_uname');
+		$username = $this->input->post('username');
+		$password = $this->input->post('password');
+		
+		if( $this->userauth->tryassign($username, $password) ){
+			
+		}
+	  
 	  redirect('controlpanel', 'location');
   }
   
