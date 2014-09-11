@@ -54,7 +54,8 @@ class Userauth{
 		#redirect('user/login','location');
 	}
 
-	function UpdateFromLDAP($username, $ldap = $this->ldap_info) {
+	function UpdateFromLDAP($username, $ldap = NULL) {
+		$ldap = $ldap == NULL ? $this->ldap_info : $ldap;
 		var_dump($ldap); die();
 	}
 
