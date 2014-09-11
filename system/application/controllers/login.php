@@ -28,7 +28,7 @@ class Login extends Controller {
 		}
 		$cols[1]['width'] = '40%';
 		
-  	$layout['showtitle'] = 'Login to '.$school_data->name;
+  	$layout['showtitle'] = 'Provide local account credentials...';
 		$layout['body'] = $this->load->view('columns', $cols, True);
 
   	$this->load->view('layout', $layout);	  

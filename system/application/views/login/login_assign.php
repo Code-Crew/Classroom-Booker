@@ -17,7 +17,7 @@ echo form_open('login/assign_submit', array('id'=>'login','class'=>'cssform'), a
 			'size' => '20',
 			'maxlength' => '20',
 			'tabindex' => $t,
-			'value' => $username,
+			'value' => '<NEW USER>',
 		));
 		$t++;
 		?>
