@@ -50,7 +50,7 @@ echo form_open('login/assign_submit', array('id'=>'login','class'=>'cssform'), a
 
 <?php
 $submit['submit'] = array('Proceed', $t);
-//$submit['cancel'] = array('Cancel', $t+1, '');
+$submit['cancel'] = array('Cancel', $t+1, '');
 $this->load->view('partials/submit', $submit);
 echo form_close();
 ?>
