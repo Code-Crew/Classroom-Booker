@@ -68,6 +68,8 @@ class Userauth{
  
 	function sessionFromRow($row) {
 		//var_dump($row);
+		$this->object->db->where('username', $row->username);
+		$this->object->db->update('users', array('lastlogin' => $this->timestamp));
 		$session_data = array(
 			'user_id' => $row->user_id,
 			'username' => $row->username,
@@ -149,8 +151,8 @@ class Userauth{
 		if($count == 1) {
 			$row = $query->row();
 			$row->lastlogin = $this->timestamp;
-			$this->object->db->where('username', $username);
-			$this->object->db->update('users', array('lastlogin' => $this->tampstamp));
+			//$this->object->db->where('username', $username);
+			//$this->object->db->update('users', array('lastlogin' => $this->tampstamp));
 			$this->sessionFromRow($row);
 			return true;
 		}
