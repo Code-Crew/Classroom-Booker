@@ -105,6 +105,7 @@ class Userauth{
 		$this->object->session->set_userdata($sessdata);
 
 		$data = array(
+			'user_id' => $info[0]['usncreated'][0],
 			'username' => $username,
 			'authlevel' => 1,
 			'enabled' => 1,
@@ -119,9 +120,9 @@ class Userauth{
 
 		if($return <= 0) {
 			//$this->crud->Add2('users', 'user_id', $info[0]['usncreated'][0], $data);
-			$this->object->db->insert('users', array('user_id' => $info[0]['usncreated'][0]) );
+			$this->object->db->insert('users', $data) );
 		}
-		$this->object->db->update('users', $data);
+		//$this->object->db->update('users', $data);
 		return true;
 /*
 				$sessdata['user_id'] = $row->user_id;
