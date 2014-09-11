@@ -22,7 +22,7 @@ class Userauth{
 
 	
 	var $object;
-	var $timestamp
+	var $timestamp;
 	var $allowed_users = array();
 	var $denied_users = array();
 	var $allowed_set = false;
