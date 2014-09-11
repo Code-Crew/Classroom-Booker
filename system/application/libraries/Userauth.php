@@ -69,16 +69,12 @@ class Userauth{
 	function trylogin($username, $password) {
 		if( $username == '' && $password == '') { return false; }
 		$config =& get_config();
-		ldap_set_option(NULL, LDAP_OPT_DEBUG_LEVEL, 7);
-		$ldap = ldap_connect("ldap://localhost") or die("Could not connect to LDAP server.");
-		$bind = ldap_bind($ldap, "{$config['ldap_login_prefix']}{$username}{$config['ldap_login_postfix']}", $password);		
-		if(!$bind) { die("Bind error"); return false; }
 
 		$timestamp = mdate("%Y-%m-%d %H:%i:%s");
 
 		$query = $this->object->db->query("SELECT * FROM users WHERE username='{$username}'");
 		$return = $query->num_rows();
-		die($return);
+		//die($return);
 		if($return > 0) {
 			$row = $query->row();
 			if($row->user_id < 10) {
@@ -96,6 +92,11 @@ class Userauth{
 				return true;				
 			}
 		}
+		
+		ldap_set_option(NULL, LDAP_OPT_DEBUG_LEVEL, 7);
+		$ldap = ldap_connect("ldap://localhost") or die("Could not connect to LDAP server.");
+		$bind = ldap_bind($ldap, "{$config['ldap_login_prefix']}{$username}{$config['ldap_login_postfix']}", $password);		
+		if(!$bind) { die("Bind error"); return false; }
 		
 		$sr=ldap_search($ldap, $config['ldap_search_dn'], "(sAMAccountName={$username})", array('name', 'uSNCreated', 'displayName', 'userPrincipalName', 'givenName', 'sn'));
 		$info = ldap_get_entries($ldap, $sr);
