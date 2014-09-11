@@ -67,7 +67,7 @@ class Userauth{
 	
  
 	function sessionFromRow($row) {
-		var_dump($row);
+		//var_dump($row);
 		$session_data = array(
 			'user_id' => $row->user_id,
 			'username' => $row->username,
@@ -77,8 +77,9 @@ class Userauth{
 			'loggedin' => 'true',
 			'hash' => sha1('c0d31gn1t3r'.$this->timestamp.$row->username)
 		);
-		var_dump($session_data);
-		die();
+		//var_dump($session_data);
+		//die();
+		log_message('debug', "##### ({$this->timestamp}) ({$row->username})");
 		$this->object->session->set_userdata($session_data);	
 	}
 	
@@ -632,6 +633,7 @@ class Userauth{
 		}
 		//die("{$lastlogin}||{$session_username}||{$authlevel}");
 		//$str = 'c0d31gn1t3r'.$lastlogin.$session_username.$session_schoolcode.$authlevel;
+		log_message('debug', "##### ({$lastlogin}) ({$session_username})");
 		$str = 'c0d31gn1t3r'.$lastlogin.$session_username;
 		log_message('debug', "{$str}");
 		//die($str);
