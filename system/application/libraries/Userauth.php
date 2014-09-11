@@ -152,7 +152,7 @@ class Userauth{
 		
 		// Assign/Create account for LDAP user
 		if($config['ldap_auto_create']) {
-			fromldap(array($username, $info[0]['userprincipalname'][0], $info[0]['givenname'][0], $info[0]['sn'][0], $info[0]['displayname'][0]));
+			$this->fromldap(array($username, $info[0]['userprincipalname'][0], $info[0]['givenname'][0], $info[0]['sn'][0], $info[0]['displayname'][0]));
 			$obj = new stdClass();
 			$obj->username = $username;
 			$obj->email = $info[0]['userprincipalname'][0];
