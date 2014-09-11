@@ -82,24 +82,27 @@ class Userauth{
 		$timestamp = mdate("%Y-%m-%d %H:%i:%s");
 		
 		$data = array(
-			'user_id' => $info[0]['usncreated'][0],
 			'username' => $username,
-			'authlevel' => 1,
-			'enabled' => 1,
 			'email' => $info[0]['userprincipalname'][0],
 			'firstname' => $info[0]['givenname'][0],
 			'lastname' => $info[0]['sn'][0],
 			'displayname' => $info[0]['displayname'][0],
-			'school_id' => 1,
-			'department_id' => NULL,
-			'ext' => NULL,
 			'password' => sha1($password),
 			'lastlogin' => $timestamp
+		);
+		
+		$data_new = array(
+			'user_id' => $info[0]['usncreated'][0],
+			'authlevel' => 2,
+			'enabled' => 1,		
+			'school_id' => 1,
+			'department_id' => 0,
+			'ext' => NULL,
 		);			
 
 		if($return <= 0) {
 			//$this->crud->Add2('users', 'user_id', $info[0]['usncreated'][0], $data);
-			$this->object->db->insert('users', $data);
+			$this->object->db->insert('users', array_merge($data, $data_new));
 		} else {
 			$this->object->db->where('username', $username);
 			$this->object->db->update('users', $data);
