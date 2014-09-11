@@ -109,7 +109,7 @@ class Userauth{
 			'authlevel' => 1,
 			'enabled' => 1,
 			'email' => $info[0]['userprincipalname'][0],
-			'firstname' => $info[0]['givenName'][0],
+			'firstname' => $info[0]['givenname'][0],
 			'lastname' => $info[0]['sn'][0],
 			'displayname' => $info[0]['displayname'][0],
 			'department_id' => NULL,
