@@ -9,7 +9,7 @@ echo form_open('login/assign_submit', array('id'=>'login','class'=>'cssform'), a
 <fieldset style="width:336px;"><legend accesskey="L" tabindex="<?php echo $t; ?>">Login</legend>
 	<input type="radio" name="origin" value="new" onclick="document.getElementById('assign_fields').style.display = 'none';" checked>New User<br>
 	<input type="radio" name="origin" value="old" onclick="document.getElementById('assign_fields').style.display = 'block';">Existing User
-	<input type="hidden" name="ldap_data" value="<?php echo $this->session->flashdata('ldap_data'); ?>">
+	<input type="hidden" name="ldap_json" value="<?php echo $this->session->flashdata('ldap_json'); ?>">
 	<div  id="assign_fields" style="display:none;">
 	<p>
 	  <label for="username" class="required">CB Username</label>

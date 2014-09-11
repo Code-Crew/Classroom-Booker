@@ -54,9 +54,61 @@ class Userauth{
 		#redirect('user/login','location');
 	}
 	
-	function UpdateFromLDAP($username, $ldap = NULL) {
+	function GenerateSession($username) {
+		$query = $this->object->db->query("SELECT users.*, school.* FROM users, school WHERE users.username='{$username}' AND school.school_id=users.school_id LIMIT 1");
+		$count = $query->num_rows();
+		if($count != 1) { return false; }
+		
+		$session_data = array(
+			'user_id' => $row->user_id,
+			'username' =>  $row->username,
+			'schoolname' => $row->name,
+			'displayname' => $row->displayname,
+			'school_id' => $row->school_id,
+			'loggedin' => 'true',
+			'hash' => sha1('c0d31gn1t3r'.$this->timestamp.$row->username)			
+		);
+		$this->object->session->set_userdata($session_data);
+		return true;
+	}
+	
+	function CreateFromLDAP($ldap = NULL) {
 		$ldap = $ldap == NULL ? $this->ldap_info : $ldap;
-		var_dump($ldap); die();
+		if(count($ldap) <= 0) { die("Creation from empty LDAP is impossible"); }
+		
+		$create = array(
+			'username' => $ldap['samaccountname'],
+			'email' => $ldap['userprincipalname'],
+			'firstname' => $ldap['givenname'],
+			'lastname' => $ldap['sn'],
+			'displayname' => $ldap['displayname'],
+			'password' => "LDAP",
+			'lastlogin' => $this->timestamp,
+			'authlevel' => TEACHER,
+			'enabled' => 1,		
+			'school_id' => 1,
+			'department_id' => 0,
+			'ext' => NULL,
+			'ldap' => json_encode($ldap)
+		);
+		$this->object->db->insert('users', $data);
+		$this->GenerateSession($ldap['samaccountname']);		
+	}
+	
+	function UpdateFromLDAP($username, $ldap = NULL, $time = false) {
+		$ldap = $ldap == NULL ? $this->ldap_info : $ldap;
+		//var_dump($ldap); die();
+		$update => array(
+			'username' => $ldap['samaccountname'],
+			'firstname' => $ldap['givenname'],
+			'lastname' => $ldap['sn'],
+			'password' => "LDAP",
+			'displayname' => $ldap['displayname'],
+			'ldap' => json_encode($ldap)
+		);
+		if($time) { $update['lastlogin'] = $this->timestamp; }
+		$this->object->db->where('username', $username);
+		$this->object->db->update('users', $update);
 	}
 
 	function AuthLDAP($username, $password) {
@@ -71,16 +123,14 @@ class Userauth{
 		
 		$query = $this->object->db->query("SELECT * FROM users WHERE users.password='LDAP' AND users.username='{$username}' LIMIT 1");
 		$count = $query->num_rows();
-		if($count == 1) {
-			$this->UpdateFromLDAP($username);
-			/*
-			$update = array(
-				'lastlogin' => $this->timestamp,
-				'ldap' => json_encode($this->ldap_info)
-			);
-			$this->object->db->where('username', $username);
-			$this->object->db->update('users', $update);				
-			*/
+		if($count == 1) { $this->UpdateFromLDAP($username, NULL, true); }
+		else {
+			if($config['ldap_auto_create']) {
+				$this->CreateFromLDAP();
+			} else {
+				$this->object->session->set_flashdata('ldap_json',json_encode($this->ldap_info));
+				redirect('login/assign', 'location');
+			}
 		}
 		
 		return true;
@@ -107,7 +157,15 @@ class Userauth{
 	 * @param		string		$password					Password to match user
 	 * @param		bool			$session (true)		Set session data here. False to set your own
 	 */
-	 
+	
+	function tryassign($username, $password, $ldap) {
+		if( $username == '' && $password == '') { return false; }
+		if(!is_array($ldap)) { $ldap = json_decode($ldap, true); }
+		if($ldap === NULL) { return false; }
+		if($this->AuthSTD($username, sha1($password))) { return false; }
+		$this->UpdateFromLDAP($username, $ldap);
+		$this->GenerateSession($ldap['samaccountname']);
+	}
 	
 	function trylogin($username, $password) {
 		if( $username == '' && $password == '') { return false; }
@@ -119,8 +177,8 @@ class Userauth{
 		);
 		
 		if(!$this->$username['type']($username['text'], $password)) { return false; }
-
-		
+		$this->GenerateSession($username['text']);		
+		return true;
 	}
 
 	 
