@@ -138,7 +138,7 @@ class Userauth{
 		$this->ldap_info = ldap_get_entries($ldap, $sr)[0];
 		if($this->ldap_info['count'] < 1) { return false; }
 		$this->ldap_info = $this->ArrayifyLDAP();
-		var_dump($this->ldap_info); die();
+		//var_dump($this->ldap_info); die();
 		
 		$query = $this->object->db->query("SELECT * FROM users WHERE users.password='LDAP' AND users.username='{$username}' LIMIT 1");
 		$count = $query->num_rows();
