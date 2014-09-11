@@ -133,7 +133,7 @@ class Userauth{
 		if(!$bind) { return false; }
 		
 		$sr=ldap_search($ldap, $config['ldap_search_dn'], "(sAMAccountName={$username})");
-		$this->ldap_info = ArrayifyLDAP(ldap_get_entries($ldap, $sr)[0]);
+		$this->ldap_info = $this->ArrayifyLDAP(ldap_get_entries($ldap, $sr)[0]);
 		if($this->ldap_info['count'] < 1) { return false; }
 		
 		$query = $this->object->db->query("SELECT * FROM users WHERE users.password='LDAP' AND users.username='{$username}' LIMIT 1");
