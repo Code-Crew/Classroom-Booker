@@ -114,7 +114,7 @@ class Userauth{
 			'loggedin' => 'true',
 			'hash' => sha1('c0d31gn1t3r'.$timestamp.$username.$this->GetAuthLevel($data['user_id']))
 		);
-		die(var_export($sessdata['hash'], true));
+		die(var_export('c0d31gn1t3r'.$timestamp.$username.$this->GetAuthLevel($data['user_id'], true));
 		$this->object->session->set_userdata($sessdata);		
 		
 		return true;
