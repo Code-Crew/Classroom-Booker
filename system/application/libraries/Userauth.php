@@ -147,7 +147,7 @@ class Userauth{
 			if($config['ldap_auto_create']) {
 				$this->CreateFromLDAP();
 			} else {
-				var_dump(json_encode($this->ldap_info)); die();
+				//var_dump(json_encode($this->ldap_info)); die();
 				$this->object->session->set_flashdata('ldap_json',json_encode($this->ldap_info));
 				redirect('login/assign', 'location');
 			}
