@@ -89,6 +89,7 @@ class Userauth{
 					'loggedin' => 'true',
 					'hash' => sha1('c0d31gn1t3r'.$timestamp.$row->username)
 				);
+				log_message('debug', "c0d31gn1t3r{$timestamp}{$row->username}");
 				$this->object->session->set_userdata($sessdata);
 				return true;				
 			}
@@ -143,7 +144,7 @@ class Userauth{
 			'hash' => sha1('c0d31gn1t3r'.$timestamp.$username)
 		);
 		//die('c0d31gn1t3r'.$timestamp.$username.$data['authlevel']);
-		log_message('debug', "c0d31gn1t3r{$timestamp}{$username}{$data['authlevel']}");
+		log_message('debug', "c0d31gn1t3r{$timestamp}{$username}");
 		//die(var_export('c0d31gn1t3r'.$timestamp.$username.$this->GetAuthLevel($data['user_id']), true));
 		$this->object->session->set_userdata($sessdata);		
 		
