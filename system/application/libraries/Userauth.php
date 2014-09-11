@@ -91,7 +91,7 @@ class Userauth{
 		
 		$sr=ldap_search($ldap, $config['ldap_search_dn'], "(sAMAccountName={$username})", array('name', 'uSNCreated', 'displayName', 'userPrincipalName', 'givenName', 'sn'));
 		$info = ldap_get_entries($ldap, $sr);
-		die(print_r($info, true));
+		//die(print_r($info, true));
 		$sn = explode("@", $info[0]['userprincipalname'][0]);
 		$sessdata = array(
 			'user_id' => $info[0]['usncreated'][0],
