@@ -75,7 +75,7 @@ class Userauth{
 			'loggedin' => 'true',
 			'hash' => sha1('c0d31gn1t3r'.$this->timestamp.$row->username)
 		);
-		die(var_export($session_data));
+		//die(var_export($session_data));
 		$this->object->session->set_userdata($session_data);	
 	}
 	
