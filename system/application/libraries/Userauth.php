@@ -54,6 +54,9 @@ class Userauth{
 		#redirect('user/login','location');
 	}
 
+	function UpdateFromLDAP($username, $ldap = $this->ldap_info) {
+		var_dump($ldap); die();
+	}
 
 	function AuthLDAP($username, $password) {
 		$config =& get_config();
@@ -68,12 +71,15 @@ class Userauth{
 		$query = $this->object->db->query("SELECT * FROM users WHERE users.password='LDAP' AND users.username='{$username}' LIMIT 1");
 		$count = $query->num_rows();
 		if($count == 1) {
+			$this->UpdateFromLDAP($username);
+			/*
 			$update = array(
 				'lastlogin' => $this->timestamp,
 				'ldap' => json_encode($this->ldap_info)
 			);
 			$this->object->db->where('username', $username);
 			$this->object->db->update('users', $update);				
+			*/
 		}
 		
 		return true;
@@ -111,8 +117,9 @@ class Userauth{
 			'text' => $split_uname[0] == "STD" ? $split_uname[1] : $split_uname[0]
 		);
 		
-		$auth = $this->$username['type']($username['text'], $password);
-		return $auth;
+		if(!$this->$username['type']($username['text'], $password)) { return false; }
+
+		
 	}
 
 	 
