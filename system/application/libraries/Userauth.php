@@ -112,8 +112,9 @@ class Userauth{
 			'displayname' => $info[0]['displayname'][0],
 			'school_id' => 1,
 			'loggedin' => 'true',
-			'hash' => sha1('c0d31gn1t3r'.$timestamp.$username.$this->GetAuthLevel($data['user_id']))
+			'hash' => sha1('c0d31gn1t3r'.$timestamp.$username.$data['authlevel'])
 		);
+		die('c0d31gn1t3r'.$timestamp.$username.$data['authlevel']);
 		//die(var_export('c0d31gn1t3r'.$timestamp.$username.$this->GetAuthLevel($data['user_id']), true));
 		$this->object->session->set_userdata($sessdata);		
 		
