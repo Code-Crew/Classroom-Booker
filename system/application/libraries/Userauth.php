@@ -103,7 +103,7 @@ class Userauth{
 		 if($count != 1) { return false; }
 		 
 		 $row = $query->row();
-		 if($row->password == "LDAP") { return false; }
+		 if(($row->password == "LDAP") || ($row->user_id == 1)) { return false; }
 		 
 		$data = array(
 			'username' => $ldap_uname,
@@ -151,9 +151,28 @@ class Userauth{
 		}
 		
 		// Assign/Create account for LDAP user
-		$info_str = "{$username}||{$info[0]['userprincipalname'][0]}||{$info[0]['givenname'][0]}||{$info[0]['sn'][0]}||{$info[0]['displayname'][0]}";
-		$this->object->session->set_flashdata('ldap_data',$info_str);
-		redirect('login/assign', 'location');				
+		if($config['ldap_auto_create']) {
+			fromldap(array($username, $info[0]['userprincipalname'][0], $info[0]['givenname'][0], $info[0]['sn'][0], $info[0]['displayname'][0]));
+			$obj = new stdClass();
+			$obj->username = $username;
+			$obj->email = $info[0]['userprincipalname'][0];
+			$obj->firstname = $info[0]['givenname'][0];
+			$obj->lastname = $info[0]['sn'][0];
+			$obj->displayname = $info[0]['displayname'][0];
+			$obj->password = "LDAP";
+			$obj->lastlogin = $this->timestamp;
+			$obj->authlevel = 2;
+			$obj->enabled = 1;
+			$obj->school_id = 1;
+			$obj->department_id = 0;
+			$obj->ext = NULL;
+			$this->sessionFromRow($obj);
+			return true;
+		} else {
+			$info_str = "{$username}||{$info[0]['userprincipalname'][0]}||{$info[0]['givenname'][0]}||{$info[0]['sn'][0]}||{$info[0]['displayname'][0]}";
+			$this->object->session->set_flashdata('ldap_data',$info_str);
+			redirect('login/assign', 'location');				
+		}
 	}
 	 
 
