@@ -62,6 +62,10 @@ class Userauth{
 	 * @param		bool			$session (true)		Set session data here. False to set your own
 	 */
 	 
+	function trylogin_local($username, $password) {
+		
+	}
+	 
 	function trylogin($username, $password) {
 		if( $username == '' && $password == '') { return false; }
 		$config =& get_config();
@@ -70,8 +74,28 @@ class Userauth{
 		$bind = ldap_bind($ldap, "{$config['ldap_login_prefix']}{$username}{$config['ldap_login_postfix']}", $password);		
 		if(!$bind) { die("Bind error"); return false; }
 
+		$timestamp = mdate("%Y-%m-%d %H:%i:%s");
+
 		$query = $this->object->db->query("SELECT * FROM users WHERE username='{$username}'");
 		$return = $query->num_rows();
+		
+		if($return > 0) {
+			$row = $query->row();
+			if($row->user_id < 10) {
+				if(sha1($password) != $row->password) { return false; }
+				$sessdata = array(
+					'user_id' => $row->user_id,
+					'username' => $row->username,
+					'schoolname' => explode("@", $row->email)[1],
+					'displayname' => $row->displayname,
+					'school_id' => 1,
+					'loggedin' => 'true',
+					'hash' => sha1('c0d31gn1t3r'.$timestamp.$row->username)
+				);
+				$this->object->session->set_userdata($sessdata);
+				return true;				
+			}
+		}
 		
 		$sr=ldap_search($ldap, $config['ldap_search_dn'], "(sAMAccountName={$username})", array('name', 'uSNCreated', 'displayName', 'userPrincipalName', 'givenName', 'sn'));
 		$info = ldap_get_entries($ldap, $sr);
@@ -79,7 +103,6 @@ class Userauth{
 		//die(print_r($info, true));
 
 		$sn = explode("@", $info[0]['userprincipalname'][0]);
-		$timestamp = mdate("%Y-%m-%d %H:%i:%s");
 		
 		$data = array(
 			'username' => $username,
