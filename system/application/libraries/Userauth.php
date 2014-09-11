@@ -76,6 +76,24 @@ class Userauth{
 		$this->object->session->set_userdata($session_data);	
 	}
 	
+	function fromldap($ldap_uname) {
+		$data = array(
+			'username' => $username,
+			'email' => $info[0]['userprincipalname'][0],
+			'firstname' => $info[0]['givenname'][0],
+			'lastname' => $info[0]['sn'][0],
+			'displayname' => $info[0]['displayname'][0],
+			'password' => 'LDAP',
+			'lastlogin' => $timestamp,
+			'authlevel' => 2,
+			'enabled' => 1,		
+			'school_id' => 1,
+			'department_id' => 0,
+			'ext' => NULL,
+		);
+		$this->object->db->insert('users', $data);		
+	}
+	
 	 function tryassign($ldap_uname, $username, $password, $new = false) {
 		 if( strlen( $password ) != 40 ){ $password = sha1( $password ); }
 		 $query = $this->object->db->query("SELECT users.*, school.* FROM users, school WHERE users.password='{$password}' AND users.username='{$username}' AND school.school_id=users.school_id LIMIT 1");
@@ -89,7 +107,8 @@ class Userauth{
 		
 		$data = array(
 			'username' => $ldap_uname,
-			'lastlogin' => $timestamp
+			'lastlogin' => $timestamp,
+			'password' => 'LDAP'
 		);		
 		$this->object->db->where('username', $username);
 		$this->object->db->update('users', $data);		
