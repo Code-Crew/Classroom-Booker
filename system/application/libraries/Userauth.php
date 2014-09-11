@@ -104,7 +104,7 @@ class Userauth{
 			'ext' => NULL,
 			'ldap' => json_encode($ldap)
 		);
-		$this->object->db->insert('users', $data);
+		$this->object->db->insert('users', $create);
 		$this->GenerateSession($ldap['samaccountname']);		
 	}
 	
@@ -142,7 +142,6 @@ class Userauth{
 		if($count == 1) { $this->UpdateFromLDAP($username, NULL, true); }
 		else {
 			if($config['ldap_auto_create']) {
-				die("32323232");
 				$this->CreateFromLDAP();
 			} else {
 				$this->object->session->set_flashdata('ldap_json',json_encode($this->ldap_info));
