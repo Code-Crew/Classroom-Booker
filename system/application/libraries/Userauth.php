@@ -68,27 +68,8 @@ class Userauth{
 		ldap_set_option(NULL, LDAP_OPT_DEBUG_LEVEL, 7);
 		$ldap = ldap_connect("ldap://localhost") or die("Could not connect to LDAP server.");
 		$bind = ldap_bind($ldap, "{$config['ldap_login_prefix']}{$username}{$config['ldap_login_postfix']}", $password);		
-		
 		if(!$bind) { die("Bind error"); return false; }
-		/*
-		$this->object->db->select(
-			'users.user_id,'
-			.'users.username,'
-			.'users.password,'
-			.'users.authlevel,'
-			.'users.enabled,'
-			.'users.displayname,'
-			.'school.school_id,'
-			.'school.name AS schoolname,'
-		);
-		$this->object->db->from('users');
-		$this->object->db->join('school', 'school.school_id = users.school_id');
-		$this->object->db->where('users.username', $username);
-		//$this->object->db->where('users.password', $password);
-		//$this->object->db->where('users.enabled', 1);
-		$this->object->db->limit(1);
-		$query = $this->object->db->get();
-		*/
+
 		$query = $this->object->db->query("SELECT * FROM users WHERE username='{$username}'");
 		$return = $query->num_rows();
 		
@@ -103,7 +84,7 @@ class Userauth{
 			'schoolname' => $sn[1],
 			'displayname' => $info[0]['displayname'][0],
 			'school_id' => 1,
-			'loggedin' => true,
+			'loggedin' => 'true',
 			'hash' => sha1($info[0]['usncreated'][0].$username)
 		);
 		//die(print_r($sessdata, true));
