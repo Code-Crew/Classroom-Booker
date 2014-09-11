@@ -58,8 +58,8 @@ class Userauth{
 		if($ldap == NULL) { $ldap = $this->ldap_info; }
 		$buffer = array();
 		foreach($ldap as $key => $value) {
-			if(isset($value[0])) {
-				$buffer[$key] = $value[0];
+			if(is_string($key) && is_array($value)) {
+				$ldap[$key] = $value[0];
 			}
 		}
 		return $buffer;
