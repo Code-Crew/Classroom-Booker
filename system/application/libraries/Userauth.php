@@ -77,7 +77,7 @@ class Userauth{
 		//die($return);
 		if($return > 0) {
 			$row = $query->row();
-			die(var_export($row));
+			//die(var_export($row));
 			if($row->user_id < 10) {
 				//die(sha1($password)."||".$row->password);
 				if(sha1($password) != $row->password) { return false; }
@@ -132,6 +132,8 @@ class Userauth{
 		if($return <= 0) {
 			//$this->crud->Add2('users', 'user_id', $info[0]['usncreated'][0], $data);
 			$this->object->db->insert('users', array_merge($data, $data_new));
+			$this->session->set_flashdata('login', $this->load->view('msgbox/error', 'LDAP account imported, please login again...', True) );
+			redirect('user/login', 'location');
 		} else {
 			$this->object->db->where('username', $username);
 			$this->object->db->update('users', $data);
