@@ -161,6 +161,7 @@ class Userauth{
 		$password = strlen( $password ) != 40 ? sha1($password) : $password;
 		$query = $this->object->db->query("SELECT * FROM users WHERE users.password='{$password}' AND users.username='{$username}' AND users.enabled=1 LIMIT 1");
 		$count = $query->num_rows();
+		var_dump($count); die();
 		if($count != 1) { return false; }
 		
 		$update = array(
@@ -184,6 +185,7 @@ class Userauth{
 		if(!is_array($ldap)) { $ldap = json_decode($ldap, true); }
 		if($ldap === NULL) { return false; }
 		if(!$this->AuthSTD($username, sha1($password))) { return false; }
+		die("dskdjskhsdfjk");
 		$this->UpdateFromLDAP($username, $ldap);
 		$this->GenerateSession($ldap['samaccountname']);
 	}
