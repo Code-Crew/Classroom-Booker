@@ -1,9 +1,68 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-$config['ldap_server'] = "ldap://localhost";
+/*
+|--------------------------------------------------------------------------
+| LDAP Server
+|--------------------------------------------------------------------------
+|
+| The IP or address to the LDAP server
+|
+|
+|
+|
+*/
+$config['ldap_server'] = "localhost";
+
+/*
+|--------------------------------------------------------------------------
+| LDAP Username Prefix
+|--------------------------------------------------------------------------
+|
+| Variable is prefixed to the login username before submittion
+|
+|
+|
+|
+*/
 $config['ldap_login_prefix'] = "LOCAL\\";
+
+/*
+|--------------------------------------------------------------------------
+| LDAP Username Postfix
+|--------------------------------------------------------------------------
+|
+| Variable is appended to the end of the login username before submittion
+|
+|
+|
+|
+*/
 $config['ldap_login_postfix'] = "";
+
+/*
+|--------------------------------------------------------------------------
+| LDAP Search Index
+|--------------------------------------------------------------------------
+|
+| Searching index for the LDAP server
+|
+|
+|
+|
+*/
 $config['ldap_search_dn'] = "OU=_SLSD,dc=local,dc=slane,dc=k12,dc=or,dc=us";
+
+/*
+|--------------------------------------------------------------------------
+| Auto-create Account
+|--------------------------------------------------------------------------
+|
+| Upon login, don't ask for account assignment. Automatically
+| create a new one.
+|
+|
+|
+*/
 $config['ldap_auto_create'] = false;
 
 /*

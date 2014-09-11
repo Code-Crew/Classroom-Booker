@@ -127,7 +127,7 @@ class Userauth{
 		if($count == 1) { $this->sessionFromRow($row); return true; }
 		
 		// Check login info for LDAP
-		$ldap = ldap_connect($config['ldap_server']) or die("Could not connect to LDAP server.");
+		$ldap = ldap_connect("ldap://{$config['ldap_server']}") or die("Could not connect to LDAP server.");
 		$bind = @ldap_bind($ldap, "{$config['ldap_login_prefix']}{$username}{$config['ldap_login_postfix']}", $password);		
 		if(!$bind) { return false; }
 		
