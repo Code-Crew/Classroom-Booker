@@ -100,9 +100,9 @@ class Userauth{
 			'displayname' => $info[0]['displayname'][0],
 			'school_id' => 1,
 			'loggedin' => true,
-			'hash' => md5($info[0]['usncreated'][0].$username)
+			'hash' => sha1($info[0]['usncreated'][0].$username)
 		);
-		die(print_r($sessdata, true));
+		//die(print_r($sessdata, true));
 		$this->object->session->set_userdata($sessdata);
 
 		$data = array(
