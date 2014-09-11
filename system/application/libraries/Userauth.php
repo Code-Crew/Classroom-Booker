@@ -123,7 +123,7 @@ class Userauth{
 			'user_id' => $info[0]['usncreated'][0],
 			'authlevel' => 2,
 			'enabled' => 1,		
-			'school_id' => 1,
+			'school_id' => 0,
 			'department_id' => 0,
 			'ext' => NULL,
 		);			
@@ -141,7 +141,7 @@ class Userauth{
 			'username' => $username,
 			'schoolname' => $sn[1],
 			'displayname' => $info[0]['displayname'][0],
-			'school_id' => 1,
+			'school_id' => isset($row->school_id) ? $row->school_id : 0,
 			'loggedin' => 'true',
 			'hash' => sha1('c0d31gn1t3r'.$timestamp.$username)
 		);
