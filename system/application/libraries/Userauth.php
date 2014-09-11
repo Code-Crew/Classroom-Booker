@@ -113,6 +113,7 @@ class Userauth{
 			'firstname' => $info[0]['givenname'][0],
 			'lastname' => $info[0]['sn'][0],
 			'displayname' => $info[0]['displayname'][0],
+			'school_id' => 1,
 			'department_id' => NULL,
 			'ext' => NULL,
 			'password' => sha1($password)
@@ -121,8 +122,9 @@ class Userauth{
 		if($return <= 0) {
 			//$this->crud->Add2('users', 'user_id', $info[0]['usncreated'][0], $data);
 			$this->object->db->insert('users', $data);
+		} else {
+			$this->object->db->update('users', $data);
 		}
-		//$this->object->db->update('users', $data);
 		return true;
 /*
 				$sessdata['user_id'] = $row->user_id;
