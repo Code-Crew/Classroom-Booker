@@ -63,7 +63,7 @@ $config['ldap_search_dn'] = "OU=_SLSD,dc=local,dc=slane,dc=k12,dc=or,dc=us";
 |
 |
 */
-$config['ldap_auto_create'] = false;
+$config['ldap_auto_create'] = true;
 
 /*
 |--------------------------------------------------------------------------
