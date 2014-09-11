@@ -85,7 +85,7 @@ class Userauth{
 		$this->object->session->set_userdata($session_data);	
 	}
 	
-	function fromldap($info) {
+	function fromldap($info, $alogin = true) {
 		$data = array(
 			'username' => $info[0],
 			'email' => $info[1],
@@ -101,6 +101,14 @@ class Userauth{
 			'ext' => NULL,
 		);
 		$this->object->db->insert('users', $data);		
+		if($alogin) {
+			$query = $this->object->db->query("SELECT users.*, school.* FROM users, school WHERE users.username='{$info[0]}' AND school.school_id=users.school_id LIMIT 1");
+			$count = $query->num_rows();
+			if($count == 1) {
+				$row = $query->row();
+				$this->sessionFromRow($row);
+			}
+		}
 	}
 	
 	 function tryassign($ldap_uname, $username, $password) {
@@ -160,20 +168,6 @@ class Userauth{
 		// Assign/Create account for LDAP user
 		if($config['ldap_auto_create']) {
 			$this->fromldap(array($username, $info[0]['userprincipalname'][0], $info[0]['givenname'][0], $info[0]['sn'][0], $info[0]['displayname'][0]));
-			$obj = new stdClass();
-			$obj->username = $username;
-			$obj->email = $info[0]['userprincipalname'][0];
-			$obj->firstname = $info[0]['givenname'][0];
-			$obj->lastname = $info[0]['sn'][0];
-			$obj->displayname = $info[0]['displayname'][0];
-			$obj->password = "LDAP";
-			$obj->lastlogin = $this->timestamp;
-			$obj->authlevel = TEACHER;
-			$obj->enabled = 1;
-			$obj->school_id = 1;
-			$obj->department_id = 0;
-			$obj->ext = NULL;
-			$this->sessionFromRow($obj);
 			return true;
 		} else {
 			$info_str = "{$username}||{$info[0]['userprincipalname'][0]}||{$info[0]['givenname'][0]}||{$info[0]['sn'][0]}||{$info[0]['displayname'][0]}";

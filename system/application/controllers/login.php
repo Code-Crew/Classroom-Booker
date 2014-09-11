@@ -74,8 +74,8 @@ class Login extends Controller {
 			}
 		} else {
 			$this->userauth->fromldap($ldap_str);
-			$this->session->set_flashdata('auth', $this->load->view('msgbox/error', 'Import complete, please login...', True));
-			redirect('login', 'location');
+			//$this->session->set_flashdata('auth', $this->load->view('msgbox/error', 'Import complete, please login...', True));
+			//redirect('login', 'location');
 		}
 	  
 	  redirect('controlpanel', 'location');
