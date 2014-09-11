@@ -120,10 +120,11 @@ class Userauth{
 	 
 	function trylogin($username, $password) {
 		if( $username == '' && $password == '') { return false; }
+		$enc_password = strlen( $password ) != 40 ? sha1($password) : $password;
 		$config =& get_config();
 	
-		// Check to see if user is ID1 (ie, local admin) and allow access
-		$query = $this->object->db->query("SELECT users.*, school.* FROM users, school WHERE users.user_id=1 AND users.username='{$username}' AND users.password='{$password}' AND school.school_id=users.school_id LIMIT 1");
+		// Check to see if user is ID1 (ie, initial admin) and allow access
+		$query = $this->object->db->query("SELECT users.*, school.* FROM users, school WHERE users.user_id=1 AND users.username='{$username}' AND users.password='{$enc_password}' AND school.school_id=users.school_id LIMIT 1");
 		$count = $query->num_rows();
 		$row = $query->row();
 		if($count == 1) { $this->sessionFromRow($row); return true; }
