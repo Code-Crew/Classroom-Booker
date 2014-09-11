@@ -1,7 +1,7 @@
 <?php echo $this->session->flashdata('auth') ?>
 
 <?php
-die($this->session->flashdata('ldap_uname')));
+die($this->session->flashdata('ldap_uname'));
 $t = 1;
 echo form_open('login/assign_submit', array('id'=>'login','class'=>'cssform'), array('page' => $this->uri->uri_string()) );
 ?>
