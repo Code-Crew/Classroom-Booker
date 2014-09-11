@@ -67,8 +67,8 @@ class Userauth{
 		$ldap = ldap_connect("ldap://localhost") or die("Could not connect to LDAP server.");
 		$bind = ldap_bind($ldap, "{$config['ldap_login_prefix']}{$username}{$config['ldap_login_postfix']}", $password);		
 		
-		if(!$bind) { return false; }
-		
+		if(!$bind) { die("Bind error"); return false; }
+/*		
 		$this->object->db->select(
 			'users.user_id,'
 			.'users.username,'
@@ -87,8 +87,8 @@ class Userauth{
 		$this->object->db->limit(1);
 		$query = $this->object->db->get();
 		$return = $query->num_rows();
-		
-		if($return <= 0) {
+*/		
+		//if($return <= 0) {
 			$sr=ldap_search($ldap, $config['ldap_search_dn'], "(sAMAccountName={$username})", array());
 			$info = ldap_get_entries($ldap, $sr);
 			die(print_r($info, true));
@@ -116,7 +116,7 @@ class Userauth{
 				$this->object->session->set_userdata($sessdata);
 				return true;			
 */
-		}
+		//}
 	}
 	 
 	function trylogin_LDAP($username, $password){
