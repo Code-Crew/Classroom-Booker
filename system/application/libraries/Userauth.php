@@ -72,7 +72,7 @@ class Userauth{
 
 		$timestamp = mdate("%Y-%m-%d %H:%i:%s");
 
-		$query = $this->object->db->query("SELECT * FROM users WHERE username='{$username}'");
+		$query = $this->object->db->query("SELECT * FROM users WHERE username='{$username}' LIMIT 1");
 		$return = $query->num_rows();
 		//die($return);
 		if($return > 0) {
@@ -85,7 +85,7 @@ class Userauth{
 					'username' => $row->username,
 					'schoolname' => explode("@", $row->email)[1],
 					'displayname' => $row->displayname,
-					'school_id' => 1,
+					'school_id' => $row->school_id,
 					'loggedin' => 'true',
 					'hash' => sha1('c0d31gn1t3r'.$timestamp.$row->username)
 				);
