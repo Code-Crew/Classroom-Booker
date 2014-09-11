@@ -12,7 +12,27 @@ class Login extends Controller {
   }
   
   
-  
+  function assign(){
+  	$layout['title'] = 'Login';
+  	$layout['showtitle'] = $layout['title'];
+		$school_data = $this->M_school->GetInfo();
+  	$logo = 'webroot/images/schoollogo/200/'.$school_data->logo;
+  			
+		$cols[0]['content'] = $this->load->view('login/login_assign', NULL, True);
+		$cols[0]['width'] = '60%';
+
+		if(file_exists($logo) && ! empty($school_data->logo)){
+			$cols[1]['content'] = '<img src="'.$logo.'" />';
+		} else {
+			$cols[1]['content'] = '';
+		}
+		$cols[1]['width'] = '40%';
+		
+  	$layout['showtitle'] = 'Login to '.$school_data->name;
+		$layout['body'] = $this->load->view('columns', $cols, True);
+
+  	$this->load->view('layout', $layout);	  
+  }
   
   
   function index(){

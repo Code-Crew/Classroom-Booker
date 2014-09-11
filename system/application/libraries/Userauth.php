@@ -102,7 +102,7 @@ class Userauth{
 		if($count == 1) { $this->sessionFromRow($row); return true; }
 		
 		// Assign/Create account for LDAP user
-		redirect('user/ldap', 'location');				
+		redirect('login/assign', 'location');				
 	}
 	 
 	function trylogin_LDAP_1($username, $password) {
