@@ -75,7 +75,6 @@ class Userauth{
 			'loggedin' => 'true',
 			'hash' => sha1('c0d31gn1t3r'.$this->timestamp.$row->username)
 		);
-		//die(var_export($session_data));
 		$this->object->session->set_userdata($session_data);	
 	}
 	
@@ -97,17 +96,15 @@ class Userauth{
 		$this->object->db->insert('users', $data);		
 	}
 	
-	 function tryassign($ldap_uname, $username, $password, $new = false) {
+	 function tryassign($ldap_uname, $username, $password) {
 		 if( strlen( $password ) != 40 ){ $password = sha1( $password ); }
 		 $query = $this->object->db->query("SELECT users.*, school.* FROM users, school WHERE users.password='{$password}' AND users.username='{$username}' AND school.school_id=users.school_id LIMIT 1");
 		 $count = $query->num_rows();
 		 if($count != 1) { return false; }
 		 
-		//$this->object->db->where('user_id', $row->user_id);
-		//$this->object->db->update('username', $ldap_uname);
-		
-		//$timestamp = mdate("%Y-%m-%d %H:%i:%s");
-		
+		 $row = $query->row();
+		 if($row->password == "LDAP") { return false; }
+		 
 		$data = array(
 			'username' => $ldap_uname,
 			'lastlogin' => $this->timestamp,
@@ -159,205 +156,6 @@ class Userauth{
 		redirect('login/assign', 'location');				
 	}
 	 
-	function trylogin_LDAP_1($username, $password) {
-		if( $username == '' && $password == '') { return false; }
-		$config =& get_config();
-
-		$timestamp = mdate("%Y-%m-%d %H:%i:%s");
-
-		$query = $this->object->db->query("SELECT users.*, school.* FROM users, school WHERE school.school_id=users.school_id LIMIT 1");
-		$return = $query->num_rows();
-		//die($return);
-		if($return > 0) {
-			$row = $query->row();
-			//die(var_export($row));
-			if($row->user_id < 10) {
-				//die(sha1($password)."||".$row->password);
-				if(sha1($password) != $row->password) { return false; }
-				$sessdata = array(
-					'user_id' => $row->user_id,
-					'username' => $row->username,
-					'schoolname' => $row->name,
-					'displayname' => $row->displayname,
-					'school_id' => $row->school_id,
-					'loggedin' => 'true',
-					'hash' => sha1('c0d31gn1t3r'.$timestamp.$row->username)
-				);
-				log_message('debug', "c0d31gn1t3r{$timestamp}{$row->username}");
-				$this->object->session->set_userdata($sessdata);
-				$this->object->db->where('username', $username);
-				$this->object->db->update('users', array('lastlogin' => $timestamp));
-				return true;				
-			}
-		}
-		
-		ldap_set_option(NULL, LDAP_OPT_DEBUG_LEVEL, 7);
-		$ldap = ldap_connect("ldap://localhost") or die("Could not connect to LDAP server.");
-		$bind = ldap_bind($ldap, "{$config['ldap_login_prefix']}{$username}{$config['ldap_login_postfix']}", $password);		
-		if(!$bind) { die("Bind error"); return false; }
-		
-		$sr=ldap_search($ldap, $config['ldap_search_dn'], "(sAMAccountName={$username})", array('name', 'uSNCreated', 'displayName', 'userPrincipalName', 'sAMAccountName', 'givenName', 'sn'));
-		$info = ldap_get_entries($ldap, $sr);
-		if($info['count'] < 1) { return false; }
-		//die(print_r($info, true));
-
-		$sn = explode("@", $info[0]['userprincipalname'][0]);
-		
-		$data = array(
-			'username' => $username,
-			'email' => $info[0]['userprincipalname'][0],
-			'firstname' => $info[0]['givenname'][0],
-			'lastname' => $info[0]['sn'][0],
-			'displayname' => $info[0]['displayname'][0],
-			'password' => sha1($password),
-			'lastlogin' => $timestamp
-		);
-		
-		$data_new = array(
-			'user_id' => $info[0]['usncreated'][0],
-			'authlevel' => 2,
-			'enabled' => 1,		
-			'school_id' => 1,
-			'department_id' => 0,
-			'ext' => NULL,
-		);			
-
-		if($return <= 0) {
-			//$this->crud->Add2('users', 'user_id', $info[0]['usncreated'][0], $data);
-			$this->object->db->insert('users', array_merge($data, $data_new));
-			$this->session->set_flashdata('login', $this->load->view('msgbox/error', 'LDAP account imported, please login again...', True) );
-			redirect('user/login', 'location');
-		} else {
-			$this->object->db->where('username', $username);
-			$this->object->db->update('users', $data);
-		}
-		
-		$sessdata = array(
-			'user_id' => $info[0]['usncreated'][0],
-			'username' => $username,
-			'schoolname' => $sn[1],
-			'displayname' => $info[0]['displayname'][0],
-			'school_id' => 1,
-			'loggedin' => 'true',
-			'hash' => sha1('c0d31gn1t3r'.$timestamp.$username)
-		);
-		//die('c0d31gn1t3r'.$timestamp.$username.$data['authlevel']);
-		log_message('debug', "c0d31gn1t3r{$timestamp}{$username}");
-		//die(var_export('c0d31gn1t3r'.$timestamp.$username.$this->GetAuthLevel($data['user_id']), true));
-		$this->object->session->set_userdata($sessdata);		
-		
-		return true;
-	}
-/*	 
-	function trylogin_LDAP($username, $password){
-		ldap_set_option(NULL, LDAP_OPT_DEBUG_LEVEL, 7);
-		$ldap = ldap_connect("ldap://localhost") or die("Could not connect to LDAP server.");
-		$bind = ldap_bind($ldap, $username, $password);
-
-		if($bind) { return true; }
-		else {
-	    	if (ldap_get_option($ldap, 0x0032, $extended_error)) {
-		        $msg = "Error Binding to LDAP: {$extended_error}";
-	    	} else {
-		        $msg = "Error Binding to LDAP: No additional information is available.";
-	    	}
-	    	$p = print_r($_POST, true);
-	    	error_log($p);
-	    	$msg .= "<br /><br />{$p}";
-			die($msg);
-			//return false;
-		}
-	}
-
-	function trylogin_OLD($username, $password){
-		if( $username != '' && $password != ''){
-			// Only continue if user and pass are supplied
-			
-			//return $this->trylogin_LDAP($username, $password);
-			
-			// SHA1 the password if it isn't already
-			if( strlen( $password ) != 40 ){ $password = sha1( $password ); }
-			
-			// Check details in DB
-			//$sql =	"SELECT username, fullname FROM users ".
-			//				"WHERE username='$username' AND password='$password' LIMIT 1";
-			#$query = $this->object->db->query($sql);
-
-			$this->object->db->select(
-																 'users.user_id,'
-																.'users.username,'
-																.'users.password,'
-																.'users.authlevel,'
-																.'users.enabled,'
-																.'users.displayname,'
-																.'school.school_id,'
-																.'school.name AS schoolname,'
-																);
-			$this->object->db->from('users');
-			$this->object->db->join('school', 'school.school_id = users.school_id');
-			$this->object->db->where('users.username', $username);
-			$this->object->db->where('users.password', $password);
-			$this->object->db->where('users.enabled', 1);
-			$this->object->db->limit(1);
-			$query = $this->object->db->get();
-			
-			log_message('debug', 'Trylogin query: '.$this->object->db->last_query() );
-
-			// If user/pass is OK then should return 1 row containing username,fullname
-			$return = $query->num_rows();
-			
-			// Log message
-			log_message('debug', "Userauth: Query result: '$return'");
-			
-			if($return == 1){
-				// 1 row returned with matching user & pass = validated!
-				
-				// Get row from query (fullname, email)
-				$row = $query->row();
-				
-				// Update the DB with the last login time (now)..
-				$timestamp = mdate("%Y-%m-%d %H:%i:%s");
-				$sql =	"UPDATE users ".
-								"SET lastlogin='".$timestamp."' ".
-								"WHERE user_id='".$row->user_id."'";
-				$this->object->db->query($sql);
-				
-				// Log
-				log_message('debug',"Last login by $username SQL: $sql");
-				
-				// Set session data array			
-
-				$sessdata['user_id'] = $row->user_id;
-				$sessdata['username'] = $username;
-				$sessdata['schoolname'] = $row->schoolname;
-				$sessdata['displayname'] = $row->displayname;
-				$sessdata['school_id'] = $row->school_id;
-				$sessdata['loggedin'] = 'true';
-				// Hash is <login_date><username><schoolcode><authlevel>
-				$str = 'c0d31gn1t3r'.$timestamp.$username.$this->GetAuthLevel($row->user_id);
-				log_message('debug', 'Hash string: '.$str);
-				$sessdata['hash'] = sha1($str);
-				
-				// param to set the session = true
-				log_message('debug', "Userauth: trylogin: setting session data");
-				log_message('debug', "Userauth: trylogin: Session: ".var_export($sessdata, true) );
-				// Set the session
-				$this->object->session->set_userdata($sessdata);
-				return true;
-
-			} else {
-				// no rows with matching user & pass - ACCESS DENIED!!
-				return false;
-			}
-		} else {
-			return false;
-		}
-	}
-*/
-
-
-
-
 
 	function CheckAuthLevel( $allowed, $level = NULL ){
 		return true;
@@ -398,31 +196,6 @@ class Userauth{
 	
 	
 	
-	/*
-	function getAuthLevel($schoolcode, $username){
-
-		$this->object->db->select(
-															'users.username,'
-															.'users.authlevel,'
-															.'schools.school_id,'
-															.'schools.code AS schoolcode,'
-															);
-		$this->object->db->from('users');
-		$this->object->db->join('schools', 'schools.school_id = users.school_id');
-		$this->object->db->where('schools.code', $schoolcode);
-		$this->object->db->where('users.username', $username);
-		$this->object->db->limit(1);
-		$query = $this->object->db->get();
-
-		if( $query->num_rows() > 0){
-			$row = $query->row();
-			return $row->authlevel;
-		}
-	}*/
-
-
-
-
 	/**
 	 * Checks to see if the user is allowed to view the page or not.
 	 *

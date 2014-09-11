@@ -12,7 +12,7 @@ echo form_open('login/assign_submit', array('id'=>'login','class'=>'cssform'), a
 	<input type="hidden" name="ldap_data" value="<?php echo $this->session->flashdata('ldap_data'); ?>">
 	<div  id="assign_fields" style="display:none;">
 	<p>
-	  <label for="username" class="required">Local Username</label>
+	  <label for="username" class="required">CB Username</label>
 	  <?php
 		$username = @field($this->validation->username);
 		echo form_input(array(
@@ -30,7 +30,7 @@ echo form_open('login/assign_submit', array('id'=>'login','class'=>'cssform'), a
 
 
 	<p>
-	  <label for="password" class="required">Password</label>
+	  <label for="password" class="required">CB Password</label>
 	  <?php
 		$password = @field($this->validation->password);
 		echo form_password(array(

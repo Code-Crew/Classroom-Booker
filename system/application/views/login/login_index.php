@@ -26,7 +26,7 @@ echo form_open('login/submit', array('id'=>'login','class'=>'cssform'), array('p
 
 
 	<p>
-	  <label for="password" class="required">Password</label>
+	  <label for="password" class="required">LDAP Password</label>
 	  <?php
 		$password = @field($this->validation->password);
 		echo form_password(array(
