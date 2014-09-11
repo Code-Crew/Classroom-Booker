@@ -60,7 +60,7 @@ class Userauth{
 		foreach($ldap as $key => $value) {
 			//var_dump(array('key' => $key, 'value' => $value));
 			if(is_string($key) && is_array($value)) {
-				//var_dump($value[0]);
+				var_dump(array('key' => $key, 'value' => $value[0], 'encoding' => mb_detect_encoding($value[0]) ));
 				$buffer[$key] = $value[0];
 			}
 		}
