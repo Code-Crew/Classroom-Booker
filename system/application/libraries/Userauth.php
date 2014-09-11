@@ -121,7 +121,7 @@ class Userauth{
 			//$this->crud->Add2('users', 'user_id', $info[0]['usncreated'][0], $data);
 			$this->object->db->insert('users', array('user_id' => $info[0]['usncreated'][0]) );
 		}
-		$this->db->update('users', $data);
+		$this->object->db->update('users', $data);
 		return true;
 /*
 				$sessdata['user_id'] = $row->user_id;
