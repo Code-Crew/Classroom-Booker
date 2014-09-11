@@ -142,7 +142,7 @@ class Userauth{
 		// Search SQL for assigned account
 		$query = $this->object->db->query("SELECT users.*, school.* FROM users, school WHERE users.username='{$username}' AND school.school_id=users.school_id LIMIT 1");
 		$count = $query->num_rows();
-		if($count == 1) { $this->sessionFromRow($row); return true; }
+		if($count == 1) { $row = $query->row(); $this->sessionFromRow($row); return true; }
 		
 		// Assign/Create account for LDAP user
 		$info_str = "{$username}||{$info[0]['userprincipalname'][0]}||{$info[0]['givenname'][0]}||{$info[0]['sn'][0]}||{$info[0]['displayname'][0]}";
