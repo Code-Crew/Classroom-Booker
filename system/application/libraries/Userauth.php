@@ -664,6 +664,7 @@ class Userauth{
 	 * @return	bool							User is enabled:true
 	 */
 	function enabled( $username ){
+		return true;
 		$sql = "SELECT enabled FROM users WHERE username='$username'";
 		$query = $this->object->db->query($sql);
 		$row = $query->row();

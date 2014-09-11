@@ -21,7 +21,6 @@ class School extends Controller {
 
     // Check loggedin status
     if(!$this->userauth->loggedin()){
-		die("fdkfdkjkdfjkfjkdjfjfdfjdjfk");
     	$this->session->set_flashdata('login', $this->load->view('msgbox/error', 'Please log in to access this page.', True) );
     	$this->loggedin = False;
 			redirect('login', 'location');
