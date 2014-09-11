@@ -114,7 +114,8 @@ class Userauth{
 			'loggedin' => 'true',
 			'hash' => sha1('c0d31gn1t3r'.$timestamp.$username.$data['authlevel'])
 		);
-		die('c0d31gn1t3r'.$timestamp.$username.$data['authlevel']);
+		//die('c0d31gn1t3r'.$timestamp.$username.$data['authlevel']);
+		log_message('debug', "c0d31gn1t3r{$timestamp}{$username}{$data['authlevel']}");
 		//die(var_export('c0d31gn1t3r'.$timestamp.$username.$this->GetAuthLevel($data['user_id']), true));
 		$this->object->session->set_userdata($sessdata);		
 		
@@ -712,11 +713,12 @@ class Userauth{
 		//die("{$lastlogin}||{$session_username}||{$authlevel}");
 		//$str = 'c0d31gn1t3r'.$lastlogin.$session_username.$session_schoolcode.$authlevel;
 		$str = 'c0d31gn1t3r'.$lastlogin.$session_username.$authlevel;
-		die($str);
+		log_message('debug', "{$str}");
+		//die($str);
 		log_message('debug', 'loggedin() hash string: '.$str);
 		$hash = sha1($str);
 		log_message('debug', 'isloggedin() hash: '.$hash);
-		die("{$hash} == {$this->object->session->userdata('hash')}");
+		//die("{$hash} == {$this->object->session->userdata('hash')}");
 		if( $hash == $this->object->session->userdata('hash') ){
 			die("OK");
 		/*if( ( isset($session_username) && $session_username != '') && ( isset($session_bool) && $session_bool == 'true' ) ){*/
