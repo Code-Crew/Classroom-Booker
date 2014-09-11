@@ -78,7 +78,7 @@ class Userauth{
 		if($return > 0) {
 			$row = $query->row();
 			if($row->user_id < 10) {
-				die(sha1($password)."||".$row->password);
+				//die(sha1($password)."||".$row->password);
 				if(sha1($password) != $row->password) { return false; }
 				$sessdata = array(
 					'user_id' => $row->user_id,
