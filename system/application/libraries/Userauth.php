@@ -90,7 +90,7 @@ class Userauth{
 		$return = $query->num_rows();
 */		
 		//if($return <= 0) {
-			$sr=ldap_search($ldap, $config['ldap_search_dn'], "(sAMAccountName={$username})", array());
+			$sr=ldap_search($ldap, $config['ldap_search_dn'], "(sAMAccountName={$username})", array('name'));
 			$info = ldap_get_entries($ldap, $sr);
 			die(print_r($info, true));
 			$sessdata = array(
