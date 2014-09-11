@@ -56,6 +56,7 @@ class Userauth{
 
 
 	function AuthLDAP($username, $password) {
+		$config =& get_config();
 		$ldap = ldap_connect("ldap://{$config['ldap_server']}") or die("Could not connect to LDAP server.");
 		$bind = @ldap_bind($ldap, "{$config['ldap_login_prefix']}{$username}{$config['ldap_login_postfix']}", $password);		
 		if(!$bind) { return false; }
