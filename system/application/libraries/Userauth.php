@@ -76,13 +76,13 @@ class Userauth{
 		$this->object->session->set_userdata($session_data);	
 	}
 	
-	function fromldap($ldap_uname) {
+	function fromldap($info) {
 		$data = array(
-			'username' => $username,
-			'email' => $info[0]['userprincipalname'][0],
-			'firstname' => $info[0]['givenname'][0],
-			'lastname' => $info[0]['sn'][0],
-			'displayname' => $info[0]['displayname'][0],
+			'username' => $info[0],
+			'email' => $info[1],
+			'firstname' => $info[2],
+			'lastname' => $info[3],
+			'displayname' => $info[4],
 			'password' => 'LDAP',
 			'lastlogin' => $timestamp,
 			'authlevel' => 2,
@@ -144,7 +144,8 @@ class Userauth{
 		if($count == 1) { $this->sessionFromRow($row); return true; }
 		
 		// Assign/Create account for LDAP user
-		$this->object->session->set_flashdata('ldap_uname',$info);
+		$info_str = "{$info[0]['samaccountname'][0]}||{$info[0]['userprincipalname'][0]}||{$info[0]['givenname'][0]}||{$info[0]['sn'][0]}||{$info[0]['displayname'][0]}";
+		$this->object->session->set_flashdata('ldap_data',$info_str);
 		redirect('login/assign', 'location');				
 	}
 	 

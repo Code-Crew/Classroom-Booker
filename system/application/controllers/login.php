@@ -60,19 +60,20 @@ class Login extends Controller {
   
   
   function assign_submit() {
-		$ldap_uname = $this->input->post('ldap_uname');
+		$ldap_data = $this->input->post('ldap_data');
 		$username = $this->input->post('username');
 		$password = $this->input->post('password');
 		$origin = $this->input->post('origin');
+		$ldap_str = explode("||", $ldap_data);
 		
 		if($origin == 'old') {
-			if( !$this->userauth->tryassign($ldap_uname, $username, $password) ){
+			if( !$this->userauth->tryassign($ldap_str[0], $username, $password) ){
 				$this->session->set_flashdata('auth', $this->load->view('msgbox/error', 'Incorrect username and/or password.', True));
-				$this->session->set_flashdata('ldap_uname',$ldap_uname);
+				$this->session->set_flashdata('ldap_data',$ldap_data);
 				redirect('login/assign', 'location');	
 			}
 		} else {
-			$this->userauth->fromldap($ldap_uname);
+			$this->userauth->fromldap($ldap_str);
 			$this->session->set_flashdata('auth', $this->load->view('msgbox/error', 'Import complete, please login...', True));
 			redirect('login', 'location');
 		}

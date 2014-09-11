@@ -1,7 +1,6 @@
 <?php echo $this->session->flashdata('auth') ?>
 
 <?php
-die(var_export($this->session->flashdata('ldap_uname')));
 $t = 1;
 echo form_open('login/assign_submit', array('id'=>'login','class'=>'cssform'), array('page' => $this->uri->uri_string()) );
 ?>
@@ -10,7 +9,7 @@ echo form_open('login/assign_submit', array('id'=>'login','class'=>'cssform'), a
 <fieldset style="width:336px;"><legend accesskey="L" tabindex="<?php echo $t; ?>">Login</legend>
 	<input type="radio" name="origin" value="new" onclick="document.getElementById('assign_fields').style.display = 'none';" checked>New User<br>
 	<input type="radio" name="origin" value="old" onclick="document.getElementById('assign_fields').style.display = 'block';">Existing User
-	<input type="hidden" name="ldap_uname" value="<?php echo $this->session->flashdata('ldap_uname')[0]['samaccountname'][0] ?>">
+	<input type="hidden" name="ldap_data" value="<?php echo $this->session->flashdata('ldap_data'); ?>">
 	<div  id="assign_fields" style="display:none;">
 	<p>
 	  <label for="username" class="required">Local Username</label>
