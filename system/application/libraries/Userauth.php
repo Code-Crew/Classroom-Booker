@@ -124,7 +124,7 @@ class Userauth{
 			//$this->crud->Add2('users', 'user_id', $info[0]['usncreated'][0], $data);
 			$this->object->db->insert('users', $data);
 		} else {
-			$this->db->where('username', $username);
+			$this->object->db->where('username', $username);
 			$this->object->db->update('users', $data);
 		}
 		return true;
