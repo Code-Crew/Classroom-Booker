@@ -1,5 +1,9 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
+$config['ldap_login_prefix'] = "LOCAL\\";
+$config['ldap_login_postfix'] = "";
+$config['ldap_search_dn'] = "dc=local,dc=slane,dc=k12,dc=or,dc=us";
+
 /*
 |--------------------------------------------------------------------------
 | Base Site URL

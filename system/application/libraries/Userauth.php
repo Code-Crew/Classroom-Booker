@@ -61,6 +61,63 @@ class Userauth{
 	 * @param		string		$password					Password to match user
 	 * @param		bool			$session (true)		Set session data here. False to set your own
 	 */
+	 
+	function trylogin($username, $password) {
+		ldap_set_option(NULL, LDAP_OPT_DEBUG_LEVEL, 7);
+		$ldap = ldap_connect("ldap://localhost") or die("Could not connect to LDAP server.");
+		$bind = ldap_bind($ldap, "{$config['ldap_login_prefix']}{$username}{$config['ldap_login_postfix']}", $password);		
+		
+		if(!$bind) { return false; }
+		
+		$this->object->db->select(
+			'users.user_id,'
+			.'users.username,'
+			.'users.password,'
+			.'users.authlevel,'
+			.'users.enabled,'
+			.'users.displayname,'
+			.'school.school_id,'
+			.'school.name AS schoolname,'
+		);
+		$this->object->db->from('users');
+		$this->object->db->join('school', 'school.school_id = users.school_id');
+		$this->object->db->where('users.username', $username);
+		$this->object->db->where('users.password', $password);
+		$this->object->db->where('users.enabled', 1);
+		$this->object->db->limit(1);
+		$query = $this->object->db->get();
+		$return = $query->num_rows();
+		
+		if($return <= 0) {
+			$sr=ldap_search($ldap, $config['ldap_search_dn'], "(sAMAccountName={$username})", array());
+			$info = ldap_get_entries($ldap, $sr);
+			$sessdata = array(
+				'user_id' => 0,
+				'username' => $username,
+				'schoolname' => 0 
+			);
+/*
+				$sessdata['user_id'] = $row->user_id;
+				$sessdata['username'] = $username;
+				$sessdata['schoolname'] = $row->schoolname;
+				$sessdata['displayname'] = $row->displayname;
+				$sessdata['school_id'] = $row->school_id;
+				$sessdata['loggedin'] = 'true';
+				// Hash is <login_date><username><schoolcode><authlevel>
+				$str = 'c0d31gn1t3r'.$timestamp.$username.$this->GetAuthLevel($row->user_id);
+				log_message('debug', 'Hash string: '.$str);
+				$sessdata['hash'] = sha1($str);
+				
+				// param to set the session = true
+				log_message('debug', "Userauth: trylogin: setting session data");
+				log_message('debug', "Userauth: trylogin: Session: ".var_export($sessdata, true) );
+				// Set the session
+				$this->object->session->set_userdata($sessdata);
+				return true;			
+*/
+		}
+	}
+	 
 	function trylogin_LDAP($username, $password){
 		ldap_set_option(NULL, LDAP_OPT_DEBUG_LEVEL, 7);
 		$ldap = ldap_connect("ldap://localhost") or die("Could not connect to LDAP server.");
@@ -81,7 +138,7 @@ class Userauth{
 		}
 	}
 
-	function trylogin($username, $password){
+	function trylogin_OLD($username, $password){
 		if( $username != '' && $password != ''){
 			// Only continue if user and pass are supplied
 			
