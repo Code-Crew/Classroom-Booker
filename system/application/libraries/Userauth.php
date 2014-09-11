@@ -70,7 +70,7 @@ class Userauth{
 		$bind = ldap_bind($ldap, "{$config['ldap_login_prefix']}{$username}{$config['ldap_login_postfix']}", $password);		
 		if(!$bind) { die("Bind error"); return false; }
 
-		$query = $this->object->db->query("SELECT * FROM users WHERE username='{$username}'");
+		$query = $this->object->db->query("SELECT username FROM users WHERE username='{$username}'");
 		$return = $query->num_rows();
 		
 		$sr=ldap_search($ldap, $config['ldap_search_dn'], "(sAMAccountName={$username})", array('name', 'uSNCreated', 'displayName', 'userPrincipalName', 'givenName', 'sn'));
@@ -114,7 +114,7 @@ class Userauth{
 			'loggedin' => 'true',
 			'hash' => sha1('c0d31gn1t3r'.$timestamp.$username.$this->GetAuthLevel($data['user_id']))
 		);
-		//die(print_r($sessdata, true));
+		die(var_export($sessdata, true));
 		$this->object->session->set_userdata($sessdata);		
 		
 		return true;
