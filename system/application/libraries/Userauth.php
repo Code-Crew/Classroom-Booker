@@ -77,20 +77,10 @@ class Userauth{
 		$info = ldap_get_entries($ldap, $sr);
 		if($info['count'] < 1) { return false; }
 		//die(print_r($info, true));
-		$sn = explode("@", $info[0]['userprincipalname'][0]);
-		$sessdata = array(
-			'user_id' => $info[0]['usncreated'][0],
-			'username' => $username,
-			'schoolname' => $sn[1],
-			'displayname' => $info[0]['displayname'][0],
-			'school_id' => 1,
-			'loggedin' => 'true',
-			'hash' => sha1($info[0]['usncreated'][0].$username)
-		);
-		//die(print_r($sessdata, true));
-		$this->object->session->set_userdata($sessdata);
 
+		$sn = explode("@", $info[0]['userprincipalname'][0]);
 		$timestamp = mdate("%Y-%m-%d %H:%i:%s");
+		
 		$data = array(
 			'user_id' => $info[0]['usncreated'][0],
 			'username' => $username,
@@ -114,6 +104,19 @@ class Userauth{
 			$this->object->db->where('username', $username);
 			$this->object->db->update('users', $data);
 		}
+		
+		$sessdata = array(
+			'user_id' => $info[0]['usncreated'][0],
+			'username' => $username,
+			'schoolname' => $sn[1],
+			'displayname' => $info[0]['displayname'][0],
+			'school_id' => 1,
+			'loggedin' => 'true',
+			'hash' => sha1('c0d31gn1t3r'.$timestamp.$username.$this->GetAuthLevel($data['user_id']))
+		);
+		//die(print_r($sessdata, true));
+		$this->object->session->set_userdata($sessdata);		
+		
 		return true;
 	}
 /*	 
