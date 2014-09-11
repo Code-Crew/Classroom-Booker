@@ -62,11 +62,50 @@ class Userauth{
 	 * @param		bool			$session (true)		Set session data here. False to set your own
 	 */
 	 
-	function trylogin_local($username, $password) {
-		
+	function sessionFromRow($row) {
+		$session_data = array(
+			'user_id' => $row->user_id,
+			'username' => $row->username,
+			'schoolname' => $row->name,
+			'displayname' => $row->displayname,
+			'school_id' => $row->school_id,
+			'loggedin' => 'true',
+			'hash' => sha1('c0d31gn1t3r'.$timestamp.$row->username)
+		);
+		$this->object->session->set_userdata($session_data);	
 	}
 	 
 	function trylogin($username, $password) {
+		if( $username == '' && $password == '') { return false; }
+		$config =& get_config();
+		$timestamp = mdate("%Y-%m-%d %H:%i:%s");
+		
+		// Check to see if user is ID1 (ie, local admin) and allow access
+		$query = $this->object->db->query("SELECT users.*, school.* FROM users, school WHERE users.user_id=1 AND users.username='{$username}' AND school.school_id=users.school_id LIMIT 1");
+		$count = $query->num_rows();
+		if($count == 1) { $this->sessionFromRow($row); return true; }
+		
+		// Check login info for LDAP
+		//ldap_set_option(NULL, LDAP_OPT_DEBUG_LEVEL, 7);
+		$ldap = ldap_connect($config['ldap_server']) or die("Could not connect to LDAP server.");
+		$bind = ldap_bind($ldap, "{$config['ldap_login_prefix']}{$username}{$config['ldap_login_postfix']}", $password);		
+		if(!$bind) { die("Bind error"); return false; }
+		
+		// Search for user in LDAP to confirm access
+		$sr=ldap_search($ldap, $config['ldap_search_dn'], "(sAMAccountName={$username})", array('name', 'uSNCreated', 'displayName', 'userPrincipalName', 'givenName', 'sn'));
+		$info = ldap_get_entries($ldap, $sr);
+		if($info['count'] < 1) { return false; }
+		
+		// Search SQL for assigned account
+		$query = $this->object->db->query("SELECT users.*, school.* FROM users, school WHERE users.username='{$username}' AND school.school_id=users.school_id LIMIT 1");
+		$count = $query->num_rows();
+		if($count == 1) { $this->sessionFromRow($row); return true; }
+		
+		// Assign/Create account for LDAP user
+		redirect('user/ldap', 'location');				
+	}
+	 
+	function trylogin_LDAP_1($username, $password) {
 		if( $username == '' && $password == '') { return false; }
 		$config =& get_config();
 

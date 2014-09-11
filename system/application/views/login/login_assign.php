@@ -2,13 +2,13 @@
 
 <?php
 $t = 1;
-echo form_open('login/submit', array('id'=>'login','class'=>'cssform'), array('page' => $this->uri->uri_string()) );
+echo form_open('login/assign_submit', array('id'=>'login','class'=>'cssform'), array('page' => $this->uri->uri_string()) );
 ?>
 
 
 <fieldset style="width:336px;"><legend accesskey="L" tabindex="<?php echo $t; ?>">Login</legend>
 	<p>
-	  <label for="username" class="required">LDAP Username</label>
+	  <label for="username" class="required">Local Username</label>
 	  <?php
 		$username = @field($this->validation->username);
 		echo form_input(array(

@@ -39,7 +39,9 @@ class Login extends Controller {
   }
   
   
-  
+  function assign_submit() {
+	  redirect('controlpanel', 'location');
+  }
   
   
   function submit(){
