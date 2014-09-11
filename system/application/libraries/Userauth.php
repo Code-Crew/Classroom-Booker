@@ -146,9 +146,9 @@ class Userauth{
 		$count = $query->num_rows();
 		if($count == 1) {
 			$row = $query->row();
-			$row['lastlogin'] = $this->timestamp;
+			$row->lastlogin = $this->timestamp;
 			$this->object->db->where('username', $username);
-			$this->object->db->update('users', $row);
+			$this->object->db->update('users', array('lastlogin' => $this->tampstamp));
 			$this->sessionFromRow($row);
 			return true;
 		}
