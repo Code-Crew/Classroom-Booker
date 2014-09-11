@@ -91,6 +91,8 @@ class Userauth{
 				);
 				log_message('debug', "c0d31gn1t3r{$timestamp}{$row->username}");
 				$this->object->session->set_userdata($sessdata);
+				$this->object->db->where('username', $username);
+				$this->object->db->update('users', array('lastlogin' => $timestamp));
 				return true;				
 			}
 		}
