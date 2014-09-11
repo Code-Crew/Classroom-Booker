@@ -87,7 +87,7 @@ class Userauth{
 			'displayname' => $info[4],
 			'password' => 'LDAP',
 			'lastlogin' => $this->timestamp,
-			'authlevel' => 2,
+			'authlevel' => TEACHER,
 			'enabled' => 1,		
 			'school_id' => 1,
 			'department_id' => 0,
@@ -159,7 +159,7 @@ class Userauth{
 			$obj->displayname = $info[0]['displayname'][0];
 			$obj->password = "LDAP";
 			$obj->lastlogin = $this->timestamp;
-			$obj->authlevel = 2;
+			$obj->authlevel = TEACHER;
 			$obj->enabled = 1;
 			$obj->school_id = 1;
 			$obj->department_id = 0;
