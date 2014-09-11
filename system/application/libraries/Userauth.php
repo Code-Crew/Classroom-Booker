@@ -22,7 +22,7 @@ class Userauth{
 
 	
 	var $object;
-	var $timestamp = mdate("%Y-%m-%d %H:%i:%s");
+	var $timestamp
 	var $allowed_users = array();
 	var $denied_users = array();
 	var $allowed_set = false;
@@ -35,6 +35,7 @@ class Userauth{
 	function Userauth(){
 		$this->object =& get_instance();
 		$this->object->load->database();
+		$this->timestamp = mdate("%Y-%m-%d %H:%i:%s");
 		log_message('debug','User Authentication Class Initialised via '.get_class($this->object));
 	}
 
