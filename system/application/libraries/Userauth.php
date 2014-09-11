@@ -53,7 +53,7 @@ class Userauth{
 		$this->object->session->destroy();
 		#redirect('user/login','location');
 	}
-
+	
 	function UpdateFromLDAP($username, $ldap = NULL) {
 		$ldap = $ldap == NULL ? $this->ldap_info : $ldap;
 		var_dump($ldap); die();
@@ -65,7 +65,7 @@ class Userauth{
 		$bind = @ldap_bind($ldap, "{$config['ldap_login_prefix']}{$username}{$config['ldap_login_postfix']}", $password);		
 		if(!$bind) { return false; }
 		
-		$sr=ldap_search($ldap, $config['ldap_search_dn'], "(sAMAccountName={$username})", array('name', 'uSNCreated', 'displayName', 'userPrincipalName', 'givenName', 'sn'));
+		$sr=ldap_search($ldap, $config['ldap_search_dn'], "(sAMAccountName={$username})");
 		$this->ldap_info = ldap_get_entries($ldap, $sr)[0];
 		if($this->ldap_info['count'] < 1) { return false; }
 		
