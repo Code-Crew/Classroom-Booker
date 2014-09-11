@@ -158,10 +158,10 @@ class Userauth{
 	}
 	
 	function AuthSTD($username, $password) {
-		var_dump($username);
 		$password = strlen( $password ) != 40 ? sha1($password) : $password;
-		var_dump($password);
-		$query = $this->object->db->query("SELECT * FROM users WHERE password='{$password}' AND username='{$username}' AND enabled=1 LIMIT 1");
+		$query = "SELECT * FROM users WHERE password='{$password}' AND username='{$username}' AND enabled=1 LIMIT 1";
+		var_dump($query);
+		$query = $this->object->db->query($query);
 		$count = $query->num_rows();
 		var_dump($count); die();
 		if($count != 1) { return false; }
