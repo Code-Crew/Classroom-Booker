@@ -67,7 +67,7 @@ class Userauth{
 	
  
 	function sessionFromRow($row) {
-		var_dump($row); die();
+		var_dump($row);
 		$session_data = array(
 			'user_id' => $row->user_id,
 			'username' => $row->username,
@@ -77,6 +77,7 @@ class Userauth{
 			'loggedin' => 'true',
 			'hash' => sha1('c0d31gn1t3r'.$this->timestamp.$row->username)
 		);
+		var_dump($session_data);
 		$this->object->session->set_userdata($session_data);	
 	}
 	
