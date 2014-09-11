@@ -10,6 +10,7 @@ $this->load->view('partials/iconbar', $icondata);
 	<tr class="heading">
 		<td class="h" title="Type">Type</td>
 		<td class="h" title="Enabled">Enabled</td>
+		<td class="h" title="Enabled">LDAP</td>
 		<td class="h" title="Username">Username</td>
 		<td class="h" title="Name">Display name</td>
 		<td class="h" title="Lastlogin">Last login</td>
@@ -25,9 +26,11 @@ $this->load->view('partials/iconbar', $icondata);
 		<?php
 		$img_type = ($this->userauth->CheckAuthLevel(ADMINISTRATOR, $user->authlevel)) ? 'user_administrator.gif' : 'user_teacher.gif';
 		$img_enabled = ($user->enabled == 1) ? 'enabled.gif' : 'no.gif';
+		$ldap_enabled = ($user->password == "LDAP") ? 'enabled.gif' : 'no.gif';
 		?>
 		<td width="50" align="center"><img src="webroot/images/ui/<?php echo $img_type ?>" width="16" height="16"  alt="<?php echo $img_type ?>" /></td>
 		<td width="70" align="center"><img src="webroot/images/ui/<?php echo $img_enabled ?>" width="16" height="16"  alt="<?php echo $img_enabled ?>" /></td>
+		<td width="70" align="center"><img src="webroot/images/ui/<?php echo $ldap_enabled ?>" width="16" height="16"  alt="<?php echo $ldap_enabled ?>" /></td>
 		<td><?php echo $user->username ?></td>
 		<td><?php
 		if( $user->displayname == '' ){ $user->displayname = $user->username; }
