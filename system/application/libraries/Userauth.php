@@ -72,11 +72,12 @@ class Userauth{
 
 		$timestamp = mdate("%Y-%m-%d %H:%i:%s");
 
-		$query = $this->object->db->query("SELECT * FROM users WHERE username='{$username}' LIMIT 1");
+		$query = $this->object->db->query("SELECT user.*, school.name FROM users WHERE username='{$username}' INNER JOIN `school` on user.school = school.school_id LIMIT 1");
 		$return = $query->num_rows();
 		//die($return);
 		if($return > 0) {
 			$row = $query->row();
+			die(var_export($row));
 			if($row->user_id < 10) {
 				//die(sha1($password)."||".$row->password);
 				if(sha1($password) != $row->password) { return false; }
@@ -123,7 +124,7 @@ class Userauth{
 			'user_id' => $info[0]['usncreated'][0],
 			'authlevel' => 2,
 			'enabled' => 1,		
-			'school_id' => 0,
+			'school_id' => 1,
 			'department_id' => 0,
 			'ext' => NULL,
 		);			
@@ -141,7 +142,7 @@ class Userauth{
 			'username' => $username,
 			'schoolname' => $sn[1],
 			'displayname' => $info[0]['displayname'][0],
-			'school_id' => isset($row->school_id) ? $row->school_id : 0,
+			'school_id' => 1,
 			'loggedin' => 'true',
 			'hash' => sha1('c0d31gn1t3r'.$timestamp.$username)
 		);
