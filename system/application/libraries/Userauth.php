@@ -190,6 +190,7 @@ class Userauth{
 		//die("dskdjskhsdfjk");
 		$this->UpdateFromLDAP($username, $ldap);
 		$this->GenerateSession($ldap['samaccountname']);
+		return true;
 	}
 	
 	function trylogin($username, $password) {
