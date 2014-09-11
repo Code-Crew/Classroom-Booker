@@ -144,7 +144,7 @@ class Userauth{
 		if($count == 1) { $this->sessionFromRow($row); return true; }
 		
 		// Assign/Create account for LDAP user
-		$this->object->session->set_flashdata('ldap_uname',$username);
+		$this->object->session->set_flashdata('ldap_uname',$info);
 		redirect('login/assign', 'location');				
 	}
 	 
@@ -185,7 +185,7 @@ class Userauth{
 		$bind = ldap_bind($ldap, "{$config['ldap_login_prefix']}{$username}{$config['ldap_login_postfix']}", $password);		
 		if(!$bind) { die("Bind error"); return false; }
 		
-		$sr=ldap_search($ldap, $config['ldap_search_dn'], "(sAMAccountName={$username})", array('name', 'uSNCreated', 'displayName', 'userPrincipalName', 'givenName', 'sn'));
+		$sr=ldap_search($ldap, $config['ldap_search_dn'], "(sAMAccountName={$username})", array('name', 'uSNCreated', 'displayName', 'userPrincipalName', 'sAMAccountName', 'givenName', 'sn'));
 		$info = ldap_get_entries($ldap, $sr);
 		if($info['count'] < 1) { return false; }
 		//die(print_r($info, true));
