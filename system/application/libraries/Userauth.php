@@ -175,7 +175,6 @@ class Userauth{
 	 
 
 	function CheckAuthLevel( $allowed, $level = NULL ){
-		return true;
 		if($level == NULL){
 			#$level = $this->getAuthLevel( $this->object->session->userdata('schoolcode'), $this->object->session->userdata('username') );
 			$query_str = "SELECT authlevel FROM users WHERE user_id='".$this->object->session->userdata('user_id')."' LIMIT 1";
@@ -198,7 +197,6 @@ class Userauth{
 	
 	
 	function GetAuthLevel($user_id = NULL){
-		return 99;
 		if($user_id == NULL){ $user_id = $this->object->session->userdata('user_id'); }
 		$query_str = "SELECT authlevel FROM users WHERE user_id='$user_id' LIMIT 1";
 		$query = $this->object->db->query($query_str);
@@ -223,7 +221,6 @@ class Userauth{
 	 * @return	bool								True if allowed. False/die() if denied
 	 */
 	function check($message = NULL, $ret = false){
-		return true;
 		log_message('debug', "Check function URI: ".$this->object->uri->uri_string());
 		$session_username = $this->object->session->userdata('username');
 		log_message('debug', "Userauth: Check: Session variable 'username': $session_username");
