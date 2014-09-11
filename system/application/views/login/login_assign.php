@@ -7,7 +7,7 @@ echo form_open('login/assign_submit', array('id'=>'login','class'=>'cssform'), a
 
 
 <fieldset style="width:336px;"><legend accesskey="L" tabindex="<?php echo $t; ?>">Login</legend>
-	<input type="radio" name="origin" value="new" onclick="document.getElementById('assign_fields').style.display = 'none';" selected>New User<br>
+	<input type="radio" name="origin" value="new" onclick="document.getElementById('assign_fields').style.display = 'none';" checked>New User<br>
 	<input type="radio" name="origin" value="old" onclick="document.getElementById('assign_fields').style.display = 'block';">Existing User
 	<div  id="assign_fields" style="display:none;">
 	<p>
