@@ -78,6 +78,7 @@ class Userauth{
 			'hash' => sha1('c0d31gn1t3r'.$this->timestamp.$row->username)
 		);
 		var_dump($session_data);
+		die();
 		$this->object->session->set_userdata($session_data);	
 	}
 	
