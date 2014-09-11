@@ -64,7 +64,7 @@ class Login extends Controller {
 		$username = $this->input->post('username');
 		$password = $this->input->post('password');
 		$origin = $this->input->post('origin');
-		$ldap_str = explode("||", $ldap_data);
+		$ldap_str = json_decode($ldap_data, true);
 		
 		if($origin == 'old') {
 			if( !$this->userauth->tryassign($ldap_str[0], $username, $password) ){

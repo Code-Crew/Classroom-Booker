@@ -23,6 +23,7 @@ class Userauth{
 	
 	var $object;
 	var $timestamp;
+	var $ldap_info = array();
 	var $allowed_users = array();
 	var $denied_users = array();
 	var $allowed_set = false;
@@ -54,7 +55,42 @@ class Userauth{
 	}
 
 
-
+	function AuthLDAP($username, $password) {
+		$ldap = ldap_connect("ldap://{$config['ldap_server']}") or die("Could not connect to LDAP server.");
+		$bind = @ldap_bind($ldap, "{$config['ldap_login_prefix']}{$username}{$config['ldap_login_postfix']}", $password);		
+		if(!$bind) { return false; }
+		
+		$sr=ldap_search($ldap, $config['ldap_search_dn'], "(sAMAccountName={$username})", array('name', 'uSNCreated', 'displayName', 'userPrincipalName', 'givenName', 'sn'));
+		$this->ldap_info = ldap_get_entries($ldap, $sr)[0];
+		if($this->ldap_info['count'] < 1) { return false; }
+		
+		$query = $this->object->db->query("SELECT * FROM users WHERE users.password='LDAP' AND users.username='{$username}' LIMIT 1");
+		$count = $query->num_rows();
+		if($count == 1) {
+			$update = array(
+				'lastlogin' => $this->timestamp,
+				'ldap' => json_encode($this->ldap_info)
+			);
+			$this->object->db->where('username', $username);
+			$this->object->db->update('users', $update);				
+		}
+		
+		return true;
+	}
+	
+	function AuthSTD($username, $password) {
+		$password = strlen( $password ) != 40 ? sha1($password) : $password;
+		$query = $this->object->db->query("SELECT * FROM users WHERE users.password='{$password}' AND users.username='{$username}' AND users.enabled=1 LIMIT 1");
+		$count = $query->num_rows();
+		if($count != 1) { return false; }
+		
+		$update = array(
+			'lastlogin' => $this->timestamp
+		);
+		$this->object->db->where('username', $username);
+		$this->object->db->update('users', $update);	
+		return true;
+	}
 
 	/**
 	 * Try and validate a login and optionally set session data
@@ -65,121 +101,19 @@ class Userauth{
 	 */
 	 
 	
- 
-	function sessionFromRow($row) {
-		//var_dump($row);
-		$this->object->db->where('username', $row->username);
-		$this->object->db->update('users', array('lastlogin' => $this->timestamp));
-		$session_data = array(
-			'user_id' => $row->user_id,
-			'username' => $row->username,
-			'schoolname' => $row->name,
-			'displayname' => $row->displayname,
-			'school_id' => $row->school_id,
-			'loggedin' => 'true',
-			'hash' => sha1('c0d31gn1t3r'.$this->timestamp.$row->username)
-		);
-		//var_dump($session_data);
-		//die();
-		log_message('debug', "##### ({$this->timestamp}) ({$row->username})");
-		$this->object->session->set_userdata($session_data);	
-	}
-	
-	function fromldap($info, $alogin = true) {
-		$data = array(
-			'username' => $info[0],
-			'email' => $info[1],
-			'firstname' => $info[2],
-			'lastname' => $info[3],
-			'displayname' => $info[4],
-			'password' => 'LDAP',
-			'lastlogin' => $this->timestamp,
-			'authlevel' => TEACHER,
-			'enabled' => 1,		
-			'school_id' => 1,
-			'department_id' => 0,
-			'ext' => NULL,
-		);
-		$this->object->db->insert('users', $data);		
-		if($alogin) {
-			$query = $this->object->db->query("SELECT users.*, school.* FROM users, school WHERE users.username='{$info[0]}' AND school.school_id=users.school_id LIMIT 1");
-			$count = $query->num_rows();
-			if($count == 1) {
-				$row = $query->row();
-				$this->sessionFromRow($row);
-			}
-		}
-	}
-	
-	 function tryassign($ldap_data, $username, $password) {
-		 if( strlen( $password ) != 40 ){ $password = sha1( $password ); }
-		 $query = $this->object->db->query("SELECT users.*, school.* FROM users, school WHERE users.password='{$password}' AND users.username='{$username}' AND school.school_id=users.school_id LIMIT 1");
-		 $count = $query->num_rows();
-		 if($count != 1) { return false; }
-		 
-		 $row = $query->row();
-		 if(($row->password == "LDAP") || ($row->user_id == 1)) { return false; }
-		 
-		 $ldap_data = explode("||", $ldap_data);
-		 
-		$data = array(
-			'username' => $ldap_data[0],
-			'displayname' => $ldap_data[4],
-			'firstname' => $ldap_data[2],
-			'lastname' => $ldap_data[3],
-			'lastlogin' => $this->timestamp,
-			'password' => 'LDAP'
-		);		
-		$this->object->db->where('username', $username);
-		$this->object->db->update('users', $data);		
-		$this->sessionFromRow($row);
-		 
-		 return true;
-	 }
-	 
 	function trylogin($username, $password) {
 		if( $username == '' && $password == '') { return false; }
-		$enc_password = strlen( $password ) != 40 ? sha1($password) : $password;
 		$config =& get_config();
-	
-		// Check to see if user is ID1 (ie, initial admin) and allow access
-		$query = $this->object->db->query("SELECT users.*, school.* FROM users, school WHERE users.user_id=1 AND users.username='{$username}' AND users.password='{$enc_password}' AND school.school_id=users.school_id LIMIT 1");
-		$count = $query->num_rows();
-		$row = $query->row();
-		if($count == 1) { $this->sessionFromRow($row); return true; }
+		$split_uname = explode("\\", $username['text']);
+		$username = array(
+			'type' => $split_uname[0] == "STD" ? 'AuthSTD' : 'AuthLDAP',
+			'text' => $split_uname[0] == "STD" ? $split_uname[1] : $split_uname[0]
+		);
 		
-		// Check login info for LDAP
-		$ldap = ldap_connect("ldap://{$config['ldap_server']}") or die("Could not connect to LDAP server.");
-		$bind = @ldap_bind($ldap, "{$config['ldap_login_prefix']}{$username}{$config['ldap_login_postfix']}", $password);		
-		if(!$bind) { return false; }
-		
-		// Search for user in LDAP to confirm access
-		$sr=ldap_search($ldap, $config['ldap_search_dn'], "(sAMAccountName={$username})", array('name', 'uSNCreated', 'displayName', 'userPrincipalName', 'givenName', 'sn'));
-		$info = ldap_get_entries($ldap, $sr);
-		if($info['count'] < 1) { return false; }
-		
-		// Search SQL for assigned account
-		$query = $this->object->db->query("SELECT users.*, school.* FROM users, school WHERE users.username='{$username}' AND school.school_id=users.school_id LIMIT 1");
-		$count = $query->num_rows();
-		if($count == 1) {
-			$row = $query->row();
-			$row->lastlogin = $this->timestamp;
-			//$this->object->db->where('username', $username);
-			//$this->object->db->update('users', array('lastlogin' => $this->tampstamp));
-			$this->sessionFromRow($row);
-			return true;
-		}
-		
-		// Assign/Create account for LDAP user
-		if($config['ldap_auto_create']) {
-			$this->fromldap(array($username, $info[0]['userprincipalname'][0], $info[0]['givenname'][0], $info[0]['sn'][0], $info[0]['displayname'][0]));
-			return true;
-		} else {
-			$info_str = "{$username}||{$info[0]['userprincipalname'][0]}||{$info[0]['givenname'][0]}||{$info[0]['sn'][0]}||{$info[0]['displayname'][0]}";
-			$this->object->session->set_flashdata('ldap_data',$info_str);
-			redirect('login/assign', 'location');				
-		}
+		$auth = $this->$username['type']($username['text'], $password);
+		return $auth;
 	}
+
 	 
 
 	function CheckAuthLevel( $allowed, $level = NULL ){
