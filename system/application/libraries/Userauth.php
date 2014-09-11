@@ -120,18 +120,16 @@ class Userauth{
 	function trylogin($username, $password) {
 		if( $username == '' && $password == '') { return false; }
 		$config =& get_config();
-		//$timestamp = mdate("%Y-%m-%d %H:%i:%s");
-		
+	
 		// Check to see if user is ID1 (ie, local admin) and allow access
 		$query = $this->object->db->query("SELECT users.*, school.* FROM users, school WHERE users.user_id=1 AND users.username='{$username}' AND school.school_id=users.school_id LIMIT 1");
 		$count = $query->num_rows();
 		if($count == 1) { $this->sessionFromRow($row); return true; }
 		
 		// Check login info for LDAP
-		//ldap_set_option(NULL, LDAP_OPT_DEBUG_LEVEL, 7);
 		$ldap = ldap_connect($config['ldap_server']) or die("Could not connect to LDAP server.");
-		$bind = ldap_bind($ldap, "{$config['ldap_login_prefix']}{$username}{$config['ldap_login_postfix']}", $password);		
-		if(!$bind) { die("Bind error"); return false; }
+		$bind = @ldap_bind($ldap, "{$config['ldap_login_prefix']}{$username}{$config['ldap_login_postfix']}", $password);		
+		if(!$bind) { return false; }
 		
 		// Search for user in LDAP to confirm access
 		$sr=ldap_search($ldap, $config['ldap_search_dn'], "(sAMAccountName={$username})", array('name', 'uSNCreated', 'displayName', 'userPrincipalName', 'givenName', 'sn'));
