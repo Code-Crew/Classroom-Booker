@@ -29,7 +29,7 @@ echo form_open('users/save', array('class' => 'cssform', 'id' => 'user_add'), ar
 </p>
 <?php echo @field($this->validation->username_error) ?>
 
-
+<!-- Password removal test
 <p>
   <label for="password1" class="required">Password</label>
   <?php
@@ -65,7 +65,7 @@ echo form_open('users/save', array('class' => 'cssform', 'id' => 'user_add'), ar
 </p>
 <?php echo @field($this->validation->password2_error) ?>
 
-
+-->
 <p>
   <label for="authlevel" class="required">Type</label>
   <?php
