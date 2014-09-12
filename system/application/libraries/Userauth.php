@@ -198,7 +198,7 @@ class Userauth{
 		$config =& get_config();
 		//$split_uname = explode("\\\\", $username);
 		//var_dump($split_uname); die();
-		$dot = strpos($username, "."));
+		$dot = strpos($username, ".");
 		$username = array(
 			'type' => $dot === false ? 'AuthSTD' : 'AuthLDAP',
 			'text' => $username
