@@ -28,6 +28,7 @@ $t = 1;
 <?php echo @field($this->validation->email_error) ?>
 
 
+<!--  Test Removal of password fields
 <p>
   <label for="password1">Password</label>
   <?php
@@ -61,6 +62,7 @@ $t = 1;
 	$t++;
 	?>
 </p>
+-->
 <?php echo @field($this->validation->password2_error) ?>
 
 
