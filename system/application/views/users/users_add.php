@@ -14,6 +14,8 @@ echo form_open('users/save', array('class' => 'cssform', 'id' => 'user_add'), ar
 <p>
   <label for="username" class="required">Username</label>
   <?php
+  //redirect for using LDAP -- no user add function needed
+		header('/index.php/users');
   $t = 2;
 	$username = @field($this->validation->username, $user->username);
 	echo form_input(array(
