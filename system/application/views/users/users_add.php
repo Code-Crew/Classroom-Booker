@@ -32,7 +32,7 @@ echo form_open('users/save', array('class' => 'cssform', 'id' => 'user_add'), ar
 
 
 <?php 	
-echo $allow_passwords;
+
 if ($allow_passwords == '1') {
 ?>
 	<p>

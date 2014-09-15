@@ -76,7 +76,7 @@ $config['ldap_auto_create'] = true;
 |
 |
 */
-$config['allow_passwords'] = 1;
+$config['allow_passwords'] = 0;
 
 /*
 |--------------------------------------------------------------------------
