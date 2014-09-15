@@ -13,9 +13,8 @@ echo form_open('users/save', array('class' => 'cssform', 'id' => 'user_add'), ar
 
 <p>
   <label for="username" class="required">Username</label>
-  <?php
-  //redirect for using LDAP -- no user add function needed
-		header('/index.php/users');
+<?php
+
   $t = 2;
 	$username = @field($this->validation->username, $user->username);
 	echo form_input(array(
@@ -31,43 +30,49 @@ echo form_open('users/save', array('class' => 'cssform', 'id' => 'user_add'), ar
 </p>
 <?php echo @field($this->validation->username_error) ?>
 
-<!-- Password removal test
-<p>
-  <label for="password1" class="required">Password</label>
-  <?php
-	#$password1 = @field($this->validation->email, $user->email);
-	echo form_password(array(
-		'name' => 'password1',
-		'id' => 'password1',
-		'size' => '20',
-		'maxlength' => '40',
-		'tabindex' => $t,
-		'value' => '',
-	));
-	$t++;
-	?>
-</p>
-<?php echo @field($this->validation->password1_error) ?>
+
+<?php 	
+if ($allow_passwords === '1') {
+?>
+	<p>
+	  <label for="password1" class="required">Password</label>
+	  <?php
+		#$password1 = @field($this->validation->email, $user->email);
+		echo form_password(array(
+			'name' => 'password1',
+			'id' => 'password1',
+			'size' => '20',
+			'maxlength' => '40',
+			'tabindex' => $t,
+			'value' => '',
+		));
+		$t++;
+		?>
+	</p>
+	<?php echo @field($this->validation->password1_error) ?>
 
 
-<p>
-  <label for="password2" class="required">Password (again)</label>
-  <?php
-	#$password1 = @field($this->validation->email, $user->email);
-	echo form_password(array(
-		'name' => 'password2',
-		'id' => 'password2',
-		'size' => '20',
-		'maxlength' => '40',
-		'tabindex' => $t,
-		'value' => '',
-	));
-	$t++;
-	?>
-</p>
-<?php echo @field($this->validation->password2_error) ?>
+	<p>
+	  <label for="password2" class="required">Password (again)</label>
+	  <?php
+		#$password1 = @field($this->validation->email, $user->email);
+		echo form_password(array(
+			'name' => 'password2',
+			'id' => 'password2',
+			'size' => '20',
+			'maxlength' => '40',
+			'tabindex' => $t,
+			'value' => '',
+		));
+		$t++;
+		?>
+	</p>
+	<?php echo @field($this->validation->password2_error) ?>
 
--->
+<?php 
+}
+
+?>
 <p>
   <label for="authlevel" class="required">Type</label>
   <?php

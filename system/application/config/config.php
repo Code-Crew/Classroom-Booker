@@ -67,6 +67,19 @@ $config['ldap_auto_create'] = true;
 
 /*
 |--------------------------------------------------------------------------
+| Allow Password fields
+|--------------------------------------------------------------------------
+|
+| When Using LDAP, editing of local (application) accounts is not needed
+| unless when editing the admin user. In order to set or update the 
+| Admin users password, please set $config['allow_passwords'] to 1
+|
+|
+*/
+$config['allow_passwords'] = 0;
+
+/*
+|--------------------------------------------------------------------------
 | Base Site URL
 |--------------------------------------------------------------------------
 |

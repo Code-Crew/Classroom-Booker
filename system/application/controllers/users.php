@@ -107,6 +107,13 @@ class Users extends Controller {
 
 	function edit($id = NULL){
 		if($id == NULL){ $id = $this->uri->segment(3); }
+		
+		// get config settings
+		$config =& get_config();
+
+		// Set variable for body from config
+		$body['allow_passwords'] = $config['allow_passwords'];
+
 		$body['user'] = $this->M_users->Get($id);
 		#print_r($body);
 		$body['departments'] = $this->crud->Get('departments');
