@@ -86,7 +86,7 @@ class Users extends Controller {
 
 	function add(){
 		//redirect for using LDAP -- no user add function needed
-		header('/index.php/users');
+		redirect('/users', 'refresh');
 		$body['departments'] = $this->crud->Get('departments');
 		// Load view
 		$layout['title'] = 'Add User';
