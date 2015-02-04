@@ -3,8 +3,8 @@
 $active_group = "default";
 
 $db['default']['hostname'] = 'localhost';
-$db['default']['username'] = 'root';
-$db['default']['password'] = 'c0d3cr3w';
+$db['default']['username'] = 'user';
+$db['default']['password'] = 'pass';
 $db['default']['database'] = 'crbs';
 $db['default']['dbdriver'] = 'mysqli';
 $db['default']['dbprefix'] = '';
